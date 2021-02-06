@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PhotoViewer">
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/image_slider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black" >
+    </androidx.viewpager.widget.ViewPager>
+
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="top|left"
+        android:layout_margin="20dp"
+        android:background="@drawable/arrow_back"></ImageButton>
+    <Button
+        android:id="@+id/select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/control_button_style_opaque"
+        android:drawableStart="@drawable/add_icon"
+        app:iconGravity="start"
+        android:layout_marginBottom="10dp"
+        android:text="@string/select"
+        android:layout_gravity="bottom|center_horizontal" />
+    <Button
+        android:id="@+id/remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/control_button_style_opaque"
+        android:drawableStart="@drawable/remove_icon"
+        android:layout_marginBottom="10dp"
+        app:iconGravity="start"
+        android:text="@string/remove"
+        android:layout_gravity="bottom|center_horizontal" />
+
+
+</FrameLayout>

@@ -1,0 +1,31 @@
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="gps_entries">
+        <item>500 meters (Not accurate)</item>
+        <item>300 meters (Recommended)</item>
+        <item>100 meters</item>
+        <item>50 meters (more accurate, but higher battery usage)</item>
+    </string-array>
+
+    <string-array name="sort_order">
+        <item>Oldest First</item>
+        <item>Newest First</item>
+    </string-array>
+
+    <string-array name="intro_titles">
+        <item>Welcome to MiTravels</item>
+        <item>Create Journeys</item>
+        <item>Add Journal entries</item>
+        <item>Add photos to your Journal</item>
+        <item>Relive your Journey</item>
+    </string-array>
+
+    <string-array name="intro_details">
+        <item>MiTravels is your personal diary that helps you document and relive special journeys that you create in your life path</item>
+        <item>Start by creating a Journey with MiTravel. This will help you to organise each journey that you embark on can, and remember your special times in your life Travels.</item>
+        <item>Once you have a created a new journey, you can add Journal entries for that journey, and document your activities and feelings.</item>
+        <item>Add photos to your journal entries to bring each journal entry to life and enhance the memories of those experiences.</item>
+        <item>Relive each Journey by following your journey through our interactive map together and revisit your experiences.</item>
+    </string-array>
+
+</resources>

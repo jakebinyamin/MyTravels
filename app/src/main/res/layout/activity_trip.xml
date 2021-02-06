@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TripActivity">
+
+    <LinearLayout
+        android:background="@color/colorTitleBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/topbar">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/button_back"/>
+
+        <TextView
+            android:id="@+id/title_text"
+            style="@style/topbar_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/home">
+        </TextView>
+
+        <ImageButton
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:background="@drawable/menu_button" />
+
+    </LinearLayout>
+<!--    app:tabTextAppearance="@style/TabText"-->
+<!--    app:tabTextAppearance="?android:attr/textAppearanceSmall"-->
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/trip_main_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topbar"
+        android:textAllCaps="false"
+        android:background="@drawable/title_background"
+        android:textStyle="normal"
+        app:tabTextAppearance="@style/TabText"
+        app:tabIconTint="@drawable/tab_colors"
+        app:tabIndicatorColor="@color/colorHiLite"
+        app:tabInlineLabel="true"
+        app:tabSelectedTextColor="@color/colorHiLite"
+        app:tabTextColor="@color/colorDarkGrey">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_general"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/home"
+            android:text="@string/home" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_journal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/book"
+            android:text="@string/journal" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/map"
+            android:text="@string/map" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/trip_main_tab">
+    </androidx.viewpager.widget.ViewPager>
+
+</RelativeLayout>
+
+<!--    android:background="#FFFFFF">-->
+<!--    android:backgroundTintMode="src_over"-->

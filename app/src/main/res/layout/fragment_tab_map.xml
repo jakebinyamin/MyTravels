@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TabMap">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom|center_horizontal"
+        >
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/event_slider2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:paddingHorizontal="30dp"
+            android:layout_marginBottom="10dp">
+        </androidx.viewpager2.widget.ViewPager2>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/map_btns_bkg"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/filter_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/regular_white_text"
+                android:layout_marginLeft="15dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <ToggleButton
+                    android:id="@+id/filter"
+                    android:background="@drawable/map_checkbox_bkg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="15dp"
+                    android:gravity="center_horizontal|bottom"
+                    android:layout_weight="1"
+                    android:textOn="@string/filter"
+                    android:textAllCaps="false"
+                    android:textOff="@string/filter"
+                    />
+                <ToggleButton
+                    android:id="@+id/events"
+                    android:background="@drawable/map_checkbox_bkg"
+                    android:gravity="center_horizontal|bottom"
+                    android:layout_margin="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textOn="@string/events"
+                    android:textOff="@string/events"
+                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    />
+                <ToggleButton
+                    android:id="@+id/legend"
+                    android:background="@drawable/map_checkbox_bkg"
+                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="15dp"
+                    android:textOn="@string/legend"
+                    android:textOff="@string/legend"
+                    android:gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="10dp"
+                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
+
+<!--    -->

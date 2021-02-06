@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle" >
+                    <solid android:color="@color/colorButtonPressed" />
+                    <corners android:radius="25dp" />
+                    <size
+                        android:width="30dp"
+                        android:height="30dp" />
+                </shape>
+            </item>
+            <item
+                android:drawable="@drawable/menu">
+            </item>
+        </layer-list>
+    </item>
+
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle" >
+                    <solid android:color="@color/colorBtnBkg" />
+                    <corners android:radius="25dp" />
+                    <size
+                        android:width="30dp"
+                        android:height="30dp" />
+                </shape>
+            </item>
+            <item
+                android:drawable="@drawable/menu">
+            </item>
+        </layer-list>
+    </item>
+
+</selector>

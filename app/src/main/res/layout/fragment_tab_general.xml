@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background = "@drawable/top_background"
+    android:orientation="vertical"
+    tools:context=".TabGeneral">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status"
+                style="@style/form_text"/>
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="In Progress"
+                style="@style/form_text_bold"/>
+            <ImageView
+                android:id="@+id/status_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical"
+                android:background="#00FFFFFF"
+                android:src="@drawable/recording"/>
+
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:gravity="start">
+
+            <Button
+                android:id="@+id/btn_record"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:background="@drawable/button_top_style"
+                android:drawableStart="@drawable/start"
+                android:drawablePadding="5dp"
+                android:visibility="gone"
+                android:paddingEnd="20dp"
+                android:text="@string/start_recording"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btn_continue"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:background="@drawable/button_top_style"
+                android:drawableStart="@drawable/continue_icon"
+                android:drawablePadding="5dp"
+                android:paddingEnd="20dp"
+                android:text="@string/continue_recording"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btn_stop"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:background="@drawable/button_top_style"
+                android:drawableLeft="@drawable/stop"
+                android:drawablePadding="5dp"
+                android:paddingEnd="20dp"
+                android:text="@string/end_recording"
+                android:textAllCaps="false" />
+
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/instructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            style="@style/help_text"
+            android:text="@string/start_instructions"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@android:color/darker_gray"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/textedit_bkg"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/TabTripTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:layout_marginHorizontal="10dp"
+            android:hint="@string/trip_title_hint"
+            android:textColorHint="@color/colorGrey"
+            style="@style/input_field_noframe_title"
+            android:gravity="start|top" />
+        <EditText
+            android:id="@+id/TabTripDescription"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="10dp"
+            style="@style/input_field_noframe_body"
+            android:hint="@string/trip_description"
+            android:textColorHint="@color/colorGrey"
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/GpsCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        style="@style/journal_list_body_text"
+        android:buttonTint="@color/colorBtnBackground"
+        android:checked="true"
+        android:text="@string/gps_checkbox" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:id="@+id/mode_dates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/mode_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/form_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:text="@string/start_date" />
+
+            <TextView
+                style="@style/form_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:text="@string/end_date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mode_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mode_start"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/trip_start_date"
+                style="@style/form_text_bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:text="@string/start_date" />
+            <TextView
+                android:id="@+id/trip_end_date"
+                style="@style/form_text_bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:text="End Date" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+

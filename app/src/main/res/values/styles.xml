@@ -1,0 +1,288 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme. .Light.DarkActionBar -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:popupMenuStyle">@style/PopupMenuStyle</item>
+        <item name="android:itemBackground">#FFFFFF</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="AppTheme.PopupDialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+    <style name="MenuTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:itemBackground">#000000</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="TabText" >
+        <item name="android:textSize">@dimen/tab_text_size</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="PrefTheme" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:itemBackground">#000000</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColorPrimary">@color/colorText</item>
+        <item name="android:textColorSecondary">#295055</item>
+        <item name="android:textColorTertiary">#295055</item>
+        <item name="android:textColorPrimaryInverse">#295055</item>
+        <item name="android:textColorSecondaryInverse">#295055</item>
+        <item name="android:textColorTertiaryInverse">#295055</item>
+
+    </style>
+
+    <style name="NoActionBar" parent="@android:style/Theme.Holo.Light">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:itemBackground">#000000</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="colorPrimaryDark">@color/colorTitleBackground</item>
+        <item name="android:navigationBarColor">@color/colorTitleBackground</item>
+        <item name="android:textColorPrimary">@color/colorText</item>
+        <item name="colorPrimary">@color/colorTitleBackground</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="Theme.AppCompat.Light">
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
+
+    <style name="control_button_style">
+        <item name="android:textColor">@color/colorButtonText</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/button_style</item>
+    </style>
+
+    <style name="control_button_style_opaque">
+        <item name="android:textColor">@color/colorButtonText_opaque</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/button_style_opaque</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="form_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:padding">5dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">@dimen/dim_form_text</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="pref_title">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="pref_help_grey">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/grey_text</item>
+    </style>
+
+    <style name="body_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="FilterText">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="FilterTextTitle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="help_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorHelpText</item>
+    </style>
+    <style name="form_text_bold">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">@dimen/dim_form_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="journal_list_title_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="journal_list_body_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">15sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="journal_list_date_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/grey_text</item>
+    </style>
+
+    <style name="title_text_bold">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="grey_body_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/dim_body_text</item>
+        <item name="android:textColor">@color/grey_text</item>
+    </style>
+
+    <style name="topbar_text">
+        <item name="android:textSize">@dimen/dim_topbar_text</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="listbox_text">
+        <item name="android:textSize">40sp</item>
+        <item name="android:background">@android:color/background_light</item>
+    </style>
+
+    <style name="input_field">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/textedit_bkg</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="input_field_white">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/text_edit_bkg_white</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="input_field_title_white">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/text_edit_bkg_white</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="regular_white_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="input_field_noframe_title">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/dim_form_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="input_field_noframe_body">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/dim_body_text</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="title_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/colorHiLite</item>
+    </style>
+
+    <style name="splash_text">
+        <item name="android:fontFamily">@font/edward</item>
+        <item name="android:textSize">30pt</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="splash_text_secondary">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="mysubtitle_text">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="intro_title">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+    <style name="intro_body">
+        <item name="android:fontFamily">serif</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">18sp</item>
+        <item name="autoSizeStepGranularity">2sp</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="Description_text">
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">12sp</item>
+        <item name="autoSizeMaxTextSize">25sp</item>
+        <item name="autoSizeStepGranularity">2sp</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:background">@drawable/textedit_bkg</item>
+        <item name="android:popupBackground">@android:color/holo_blue_light</item>
+
+    </style>
+
+    <style name="FullscreenTheme" parent="NoActionBar">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:navigationBarColor">#80000000</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+</resources>

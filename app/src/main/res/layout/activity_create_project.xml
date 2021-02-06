@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".CreateProject">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@drawable/title_background">
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/button_back"/>
+
+
+        <TextView
+            style="@style/topbar_text"
+            android:textColor="@color/colorText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="@string/new_adventure" />
+        <Button
+            android:id="@+id/do_create"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_top_style"
+            android:text="@string/create"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/trip_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:inputType="text"
+        android:hint="@string/trip_title_hint"
+        android:textColorHint="@color/colorGrey"
+        style="@style/input_field_title_white"/>
+
+    <EditText
+        android:id="@+id/TripDescription"
+        style="@style/input_field_white"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/trip_description_hint"
+        android:textColorHint="@color/colorGrey"
+        android:layout_weight="1"
+        android:gravity="start|top"
+        android:inputType="textMultiLine" />
+
+</LinearLayout>

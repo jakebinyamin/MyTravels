@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/MasterRec"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/master_rec_background"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:elevation="10dp"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="170dp"
+        android:background="@drawable/photo_bkg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/splash"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="10dp"
+        android:layout_weight="2">
+        <TextView
+            android:id="@+id/project_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:text="My Trip to Greece"
+            style="@style/input_field_noframe_title">
+        </TextView>
+        <TextView
+            android:id="@+id/line2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Started: Dec 21, 2020"
+            style="@style/input_field_noframe_body">
+        </TextView>
+        <TextView
+            android:id="@+id/line3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Finished on: Dec 21, 2020"
+            android:layout_marginBottom="10dp"
+            style="@style/input_field_noframe_body">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/input_field_noframe_body"
+                android:text="@string/status"/>
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                style="@style/input_field_noframe_body"
+                android:text="Completed"/>
+            <ImageView
+                android:id="@+id/status_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="20dp"
+                android:background="#00FFFFFF"
+                android:src="@drawable/recording">
+            </ImageView>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

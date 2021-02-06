@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background = "@drawable/top_background"
+    android:orientation="vertical"
+    tools:context=".AboutActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@drawable/title_background"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/topbar">
+        <ImageButton
+            android:id="@+id/cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/button_cancel"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:src="@drawable/logo_transp" />
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/title_text_bold"
+                android:text="@string/about_this_app"/>
+            <TextView
+                android:id="@+id/version_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/version_s"
+                style="@style/body_text"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                style="@style/title_text_bold"
+                android:text="@string/app_description"/>
+
+            <TextView
+                style="@style/body_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_description_details" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                style="@style/title_text_bold"
+                android:text="@string/privacy"/>
+            <TextView
+                style="@style/body_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/privacy_statement" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                style="@style/title_text_bold"
+                android:text="@string/credits"/>
+            <TextView
+                style="@style/body_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/credt1" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

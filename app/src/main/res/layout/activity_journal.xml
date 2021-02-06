@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/activitybkg"
+    tools:context=".JournalActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/title_background"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/button_cancel"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_marginVertical="10dp"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/title_text"
+                style="@style/topbar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/create_journal_entry" />
+            <TextView
+                android:id="@+id/date"
+                style="@style/grey_body_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:gravity="center_horizontal"
+                android:text="December 23, 2020" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/create"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_top_style"
+            android:text="@string/save"
+            android:textAllCaps="false"/>
+        <ImageButton
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/menu_button" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="10dp"
+        >
+
+        <Spinner android:id="@+id/journal_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/journal_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColorHint="@color/colorGrey"
+            style="@style/input_field_noframe_title"
+            android:hint="@string/journal_title"
+            android:gravity="start|top" />
+
+        <EditText
+            android:id="@+id/journal_entry"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/input_field_noframe_body"
+            android:gravity="start|top"
+            android:textColorHint="@color/colorGrey"
+            android:hint="@string/journal_text"
+            android:inputType="textMultiLine" />
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/show_on_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        style="@style/journal_list_body_text"
+        android:buttonTint="@color/colorBtnBackground"
+        android:checked="true"
+        android:text="@string/show_journal_entry_on_map"
+    />
+
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/textedit_bkg"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+        <ImageButton
+            android:id="@+id/addphoto"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/camera" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/photo_list"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="@dimen/dim_photolist_h" />
+
+    </LinearLayout>
+
+</LinearLayout>
