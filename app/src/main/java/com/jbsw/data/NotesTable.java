@@ -61,6 +61,7 @@ public class NotesTable extends BaseTable
     private static final String QUERY_TABLE_NOTES = "select * from " + TABLE_NOTES + " where " + COLUMN_MASTERID + " = ";
     private static final String QUERY_TABLE_NOTE = "select * from " + TABLE_NOTES + " where " + COLUMN_ID + " = "; //%d AND " + COLUMN_DATE + " = \"%s\"";
     private static final String WHERECLAUSE_FOR_MAP = " and " + COLUMN_SHOW_ONMAP + " = 1";
+    private static final String WHERECLAUSE_FOR_DATE = " and " + COLUMN_DATE + " > \"%s\" and " + COLUMN_DATE + " < \"%s\"";
     public static final String ORDERBY_CLAUSE = " order by " + COLUMN_ID;
 
     //
@@ -202,9 +203,16 @@ public class NotesTable extends BaseTable
         return DoQuery(sQuery);
     }
 
-    public long QueryAllForMap(long id)
+    public long QueryAllForMap(long id, String sDate)
     {
         String sQuery = QUERY_TABLE_NOTES + id + WHERECLAUSE_FOR_MAP;
+        if (sDate != null)
+        {
+            sDate = Utils.GetDateWithNoTime(sDate);
+            String sDateTo = Utils.GetDatePlusDays(sDate, 1);
+            String sDateQuery = String.format(WHERECLAUSE_FOR_DATE, sDate, sDateTo);
+            sQuery += sDateQuery;
+        }
         return DoQuery(sQuery);
     }
 

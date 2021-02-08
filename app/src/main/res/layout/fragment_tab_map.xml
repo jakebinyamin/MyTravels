@@ -28,65 +28,49 @@
         </androidx.viewpager2.widget.ViewPager2>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginHorizontal="30dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/map_btns_bkg"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/filter_description"
+            <CheckBox
+                android:id="@+id/view_journals"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/regular_white_text"
-                android:layout_marginLeft="15dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                style="@style/map_legend_body_text"
+                android:buttonTint="@color/colorBtnBackground"
+                android:checked="false"
+                android:text="@string/view_journals"
                 />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:layout_height="match_parent"
+                android:layout_marginVertical="5dp"
+                android:layout_marginHorizontal="10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="7dp"
+                    style="@style/map_legend_body_text"
+                    />
 
-                <ToggleButton
+                <Spinner
                     android:id="@+id/filter"
-                    android:background="@drawable/map_checkbox_bkg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_margin="15dp"
-                    android:gravity="center_horizontal|bottom"
-                    android:layout_weight="1"
-                    android:textOn="@string/filter"
-                    android:textAllCaps="false"
-                    android:textOff="@string/filter"
-                    />
-                <ToggleButton
-                    android:id="@+id/events"
-                    android:background="@drawable/map_checkbox_bkg"
-                    android:gravity="center_horizontal|bottom"
-                    android:layout_margin="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:textOn="@string/events"
-                    android:textOff="@string/events"
-                    android:textAllCaps="false"
-                    android:layout_weight="1"
-                    />
-                <ToggleButton
-                    android:id="@+id/legend"
-                    android:background="@drawable/map_checkbox_bkg"
-                    android:layout_height="40dp"
-                    android:layout_width="wrap_content"
-                    android:layout_margin="15dp"
-                    android:textOn="@string/legend"
-                    android:textOff="@string/legend"
-                    android:gravity="center_horizontal|bottom"
-                    android:layout_marginBottom="10dp"
-                    android:textAllCaps="false"
-                    android:layout_weight="1"
-                    />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:spinnerMode="dropdown"
+                    android:theme="@style/ThemeOverlay.AppCompat.Light" />
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

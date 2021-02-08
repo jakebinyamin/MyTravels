@@ -32,7 +32,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -44,6 +49,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -56,8 +62,13 @@ import com.jbsw.utils.Utils;
 
 import org.w3c.dom.Text;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
@@ -70,7 +81,7 @@ import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ON
 // TODO Add ability to view Journal
 // TODO Put icons inside of GPS icon
 
-public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnClickListener
+public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnClickListener, AdapterView.OnItemSelectedListener
 {
     private static final String TAG = "TAGTabMap";
     private static final int FILTER_ACTIVITY = 1;
@@ -78,21 +89,22 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
     private GoogleMap m_Map;
     private MapView m_MapView;
     private View m_ThisWIndow;
+    private Spinner m_Spinner;
+    private CheckBox m_CBShowJournals;
+    private DaysListAdapter m_DaysListAdapter;
+    private String m_sFilterDate = null;
+
 
     TravelMasterTable.DataRecord m_MDR;
 
-    private ToggleButton m_BtnFilter;
-    private ToggleButton m_BtnEvents;
-    private ToggleButton m_BtnLegend;
-    private TextView m_TxtFilterDate;
     private ViewPager2 m_EventList;
     private EventsAdapter m_EventsAdapter = null;
     private EventListener m_EventListener = null;
+    private boolean m_bInitialising = true;
 
     private TripActivity m_Parent;
     private float m_GreatestDistance;
-    private LatLng m_PtFirst, m_PtLast = null;
-    private boolean m_bInitialised = false;
+    private LatLng m_PtFirst = null, m_PtFurthestFromFirst = null, m_PtLast = null;
 
     public TabMap() {
         Log.d(TAG, "Constructor...");
@@ -113,7 +125,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
 
 
         Initialise(view);
-
+        m_bInitialising = false;
     }
 
     private  int pxToDp(int px) {
@@ -125,24 +137,21 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         m_Parent = (TripActivity) getActivity();
         m_MDR = m_Parent.GetDataRecord();
 
-        m_BtnFilter = (ToggleButton) view.findViewById(R.id.filter);
-        m_BtnFilter.setChecked(false);
-        m_BtnFilter.setOnClickListener(this);
+        m_CBShowJournals = m_ThisWIndow.findViewById(R.id.view_journals);
+        m_CBShowJournals.setOnClickListener(this);
+        m_CBShowJournals.setChecked(false);
 
-        m_BtnEvents = (ToggleButton) view.findViewById(R.id.events);
-        m_BtnEvents.setChecked(false);
-        m_BtnEvents.setOnClickListener(this);
-
-        m_BtnLegend = (ToggleButton) view.findViewById(R.id.legend);
-        m_BtnLegend.setOnClickListener(this);
-        m_BtnLegend.setChecked(false);
-
-        m_TxtFilterDate = (TextView) view.findViewById(R.id.filter_description);
-        m_TxtFilterDate.setVisibility(View.GONE);
+        LoadFilterData();
+        m_Spinner = m_ThisWIndow.findViewById(R.id.filter);
+        m_DaysListAdapter = new DaysListAdapter();
+        m_Spinner.setAdapter(m_DaysListAdapter);
+        m_Spinner.setSelection(0);
+        m_Spinner.setOnItemSelectedListener(this);
 
         m_EventList = (ViewPager2) view.findViewById(R.id.event_slider2);
         m_EventListener = new EventListener();
         m_EventList.registerOnPageChangeCallback(m_EventListener);
+
 
         //
         // Setup Photo Adapter
@@ -153,6 +162,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         m_EventList.setAdapter(m_EventsAdapter);
         m_EventList.setPageTransformer( new MarginPageTransformer(pxToDp(40)));
         m_EventList.setOffscreenPageLimit(3);
+        m_EventList.setVisibility(View.GONE);
 
 
         m_MapView = m_ThisWIndow.findViewById(R.id.mapView);
@@ -161,32 +171,18 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             m_MapView.onResume();
             m_MapView.getMapAsync(this);
         }
-
-        m_bInitialised = true;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d(TAG, "onDestroyView");
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        m_BtnEvents.setChecked(false);
-        m_BtnFilter.setChecked(false);
         m_MapView.onResume();
 
         Prefs prefs = new Prefs(this.getContext());
         if (prefs.HasJournalChanged()) {
             Log.d(TAG, "Refreshing data..");
-            BuildMap(null);
+            m_sFilterDate = null;
+            BuildMap();
         }
         Log.d(TAG, "onResume");
     }
@@ -198,7 +194,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         m_Map = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        BuildMap(null);
+        BuildMap();
     }
 
 
@@ -206,38 +202,72 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
      @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        m_BtnFilter.setChecked(false);
         if (requestCode == FILTER_ACTIVITY && resultCode == DlgFilter.RESULT_OK) {
-            String sDate = data.getStringExtra(DlgFilter.PARAM_FILTER_DATE);
-            BuildMap(sDate);
-            m_BtnFilter.setChecked(true);
-            m_TxtFilterDate.setVisibility(View.VISIBLE);
-            long nDays = Utils.CalculateDays(m_MDR.StartDate, sDate);
-            sDate = Utils.GetReadableStringDate(sDate);
-            if (sDate != null) {
-                String s = String.format(m_ThisWIndow.getResources().getString(R.string.view_activities_for), nDays, sDate);
-                m_TxtFilterDate.setText(s);
+            m_sFilterDate = data.getStringExtra(DlgFilter.PARAM_FILTER_DATE);
+            BuildMap();
+            long nDays = Utils.CalculateDays(m_MDR.StartDate, m_sFilterDate);
+            m_sFilterDate = Utils.GetReadableStringDate(m_sFilterDate);
+            if (m_sFilterDate != null) {
+                String s = String.format(m_ThisWIndow.getResources().getString(R.string.view_activities_for), nDays, m_sFilterDate);
             }
         }
     }
 
-    private void BuildMap(String sFilterDate)
+    private void BuildMap()
     {
         m_GreatestDistance = 0;
-        m_PtFirst = null;
 
         m_Map.clear();
         AddJournalMarkers(m_MDR.Id);
-        AddTripRoute(m_MDR.Id, m_MDR.StartDate, sFilterDate);
+        AddTripRoute(m_MDR.Id, m_MDR.StartDate);
 
 //        BuildMapInBkg MapLoader = new BuildMapInBkg(sFilterDate);
 //        Thread thread = new Thread(MapLoader);
 //        thread.start();
     }
 
+    //
+    // Methods for when an item selected from, spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        if (m_bInitialising)
+            return;
+
+        Log.d(TAG, "Spinner has changed");
+        if (position == 0) {
+            m_sFilterDate = null;
+        }
+        else {
+            FilterDataPkt Data = m_DataList.get(position-1);
+            m_sFilterDate = String.format("%d-%02d-%02d", Data.m_Date.getYear(), Data.m_Date.getMonthValue(), Data.m_Date.getDayOfMonth());
+        }
+
+        if (m_CBShowJournals.isChecked())
+        {
+            m_EventList.setVisibility(View.GONE);
+            ResetEventList();
+        }
+        BuildMap();
+    }
+
+    private void ResetEventList()
+    {
+        m_EventsAdapter = null;
+        m_EventsAdapter = new EventsAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
+        m_EventList.setAdapter(m_EventsAdapter);
+        m_EventsAdapter.Refresh();
+        m_EventList.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     private class BuildMapInBkg implements Runnable
     {
-        String m_sFilterDate;
+        private String m_sFilterDate;
         public BuildMapInBkg(String sFilterDate)
         {
             m_sFilterDate = sFilterDate;
@@ -254,25 +284,27 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             });
 
             m_GreatestDistance = 0;
-            m_PtFirst = null;
 
             AddJournalMarkers(m_MDR.Id);
-            AddTripRoute(m_MDR.Id, m_MDR.StartDate, m_sFilterDate);
+            AddTripRoute(m_MDR.Id, m_MDR.StartDate);
         }
     }
-    private void AddTripRoute(long Id, String sFromDate, String sFilterDate)
+    private void AddTripRoute(long Id, String sFromDate)
     {
         GpsDataTable Tab = new GpsDataTable();
         GpsDataTable.DataRecord DR;
 
         //
         // build the correct Query
-        if (sFilterDate == null)
+        if (m_sFilterDate == null)
             Tab.QueryAll(Id);
         else
-            Tab.QueryForDate(Id, sFilterDate);
+            Tab.QueryForDate(Id, m_sFilterDate);
 
         LatLng Pt = null,PtLast = null;
+        m_PtFirst = null;
+        m_PtFurthestFromFirst = null;
+        m_GreatestDistance = 0;
         int ColorList[] = Utils.GetColorList();
         int nClrSize = ColorList.length;
         while ((DR = Tab.GetNextRecord()) != null)
@@ -288,6 +320,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
                 Location.distanceBetween(m_PtFirst.latitude, m_PtFirst.longitude, Pt.latitude,  Pt.longitude, res2);
                 if (res2[0] > m_GreatestDistance) {
                     m_GreatestDistance = res2[0];
+                    m_PtFurthestFromFirst = Pt;
                 }
             }
             if (PtLast != null && results[0] > 50.0)
@@ -307,59 +340,84 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             }
         }
 
-        Zoom(Pt);
+        Zoom(m_PtFirst, m_PtFurthestFromFirst);
     }
 
-    private void Zoom(LatLng Pt)
+    private void Zoom(LatLng PtFirst, LatLng PtLast)
     {
-        if (Pt == null && m_PtLast == null)
+        if (PtFirst == null || PtLast == null)
             return;
 
-        if (Pt == null)
-            Pt = m_PtLast;
-
-        float zoomLevel = 0.0f;
-        if (m_GreatestDistance < 700)
-            zoomLevel = 17.0f;
-        else if (m_GreatestDistance < 2000)
-            zoomLevel = 15.0f;
-        else if (m_GreatestDistance < 10000)
-            zoomLevel = 13.0f;
-        else if (m_GreatestDistance < 30000)
-            zoomLevel = 12.0f;
-        else if (m_GreatestDistance < 40000)
-            zoomLevel = 10.0f;
-        else if (m_GreatestDistance < 60000)
-            zoomLevel = 9.5f;
-        else if (m_GreatestDistance < 100000)
-            zoomLevel = 9.0f;
-        else if (m_GreatestDistance < 200000)
-            zoomLevel = 8.5f;
-        else if (m_GreatestDistance < 300000)
-            zoomLevel = 7.5f;
-        else if (m_GreatestDistance < 400000)
-            zoomLevel = 6.5f;
-        else
-             zoomLevel = 4.0f;
-
-        final float Innerzoom = zoomLevel;
-        final LatLng InnerPt = Pt;
-        getActivity().runOnUiThread(
-        new Runnable() {
-            @Override
-            public void run() {
-                m_Map.animateCamera(CameraUpdateFactory.newLatLngZoom(InnerPt, Innerzoom));
-            }
-        });
-
-        m_PtLast = Pt;
+        final LatLngBounds bounds = new LatLngBounds.Builder().include(PtFirst).include(PtLast).build();
+        m_Map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
     }
+
+//    private void Zoom(LatLng Pt, LatLng PtFirst)
+//    {
+//        if (Pt == null && m_PtLast == null)
+//            return;
+//
+//        if (Pt == null)
+//            Pt = m_PtLast;
+//
+//        Log.d(TAG, "Greatest Distance: " + m_GreatestDistance + " Pt: " + Pt + " PtFirst: " + PtFirst);
+//        float zoomLevel = 0.0f;
+//        if (m_GreatestDistance < 700)
+//            zoomLevel = 16.5f;
+//        else if (m_GreatestDistance < 2000)
+//            zoomLevel = 14.5f;
+//        else if (m_GreatestDistance < 10000)
+//            zoomLevel = 13.0f;
+//        else if (m_GreatestDistance < 30000)
+//            zoomLevel = 12.0f;
+//        else if (m_GreatestDistance < 40000)
+//            zoomLevel = 10.0f;
+//        else if (m_GreatestDistance < 60000)
+//            zoomLevel = 9.5f;
+//        else if (m_GreatestDistance < 100000)
+//            zoomLevel = 9.0f;
+//        else if (m_GreatestDistance < 200000)
+//            zoomLevel = 8.5f;
+//        else if (m_GreatestDistance < 300000)
+//            zoomLevel = 7.5f;
+//        else if (m_GreatestDistance < 400000)
+//            zoomLevel = 6.5f;
+//        else
+//            zoomLevel = 4.0f;
+//
+//        final float Innerzoom = zoomLevel;
+//        final LatLng InnerPt = Pt;
+//
+//        if (PtFirst == null) {
+//            m_Map.animateCamera(CameraUpdateFactory.newLatLngZoom(InnerPt, Innerzoom));
+//        }
+//        else {
+//            final LatLngBounds bounds = new LatLngBounds.Builder().include(InnerPt).include(PtFirst).build();
+//            m_Map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 120));
+//        }
+////        getActivity().runOnUiThread(
+////        new Runnable() {
+////            @Override
+////            public void run() {
+////                if (PtFirst == null) {
+////                    m_Map.animateCamera(CameraUpdateFactory.newLatLngZoom(InnerPt, Innerzoom));
+////                }
+////                else {
+////                    final LatLngBounds bounds = new LatLngBounds.Builder().include(InnerPt).include(new LatLng(minLat, minLon)).build();
+////                    m_Map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 120));
+////                }
+////
+////            }
+////        });
+//
+//        m_PtLast = Pt;
+//    }
 
     private void AddJournalMarkers(long Id)
     {
         NotesTable Tab = new NotesTable();
 
-        Tab.QueryAllForMap(Id);
+        Tab.QueryAllForMap(Id, m_sFilterDate);
         NotesTable.DataRecord JDR;
 
         LatLng Pt = null;
@@ -390,42 +448,147 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
     @Override
     public void onClick(View v)
     {
-        if (v == m_BtnFilter) {
-            if (m_BtnFilter.isChecked()) {
-                Intent i = new Intent(m_ThisWIndow.getContext(), DlgFilter.class);
-                i.putExtra(DlgFilter.PARAM_ID, m_MDR.Id);
-                i.putExtra(DlgFilter.PARAM_FROM_DATE, m_MDR.StartDate);
-                startActivityForResult(i, FILTER_ACTIVITY);
-            }
-            else {
-                m_TxtFilterDate.setVisibility(View.GONE);
-                BuildMap(null);
-            }
-        }
+//        if (v == m_BtnFilter) {
+//            if (m_BtnFilter.isChecked()) {
+//                Intent i = new Intent(m_ThisWIndow.getContext(), DlgFilter.class);
+//                i.putExtra(DlgFilter.PARAM_ID, m_MDR.Id);
+//                i.putExtra(DlgFilter.PARAM_FROM_DATE, m_MDR.StartDate);
+//                startActivityForResult(i, FILTER_ACTIVITY);
+//            }
+//            else {
+//                m_TxtFilterDate.setVisibility(View.GONE);
+//                BuildMap(null);
+//            }
+//        }
 
-        if (v == m_BtnEvents)
+        if (v == m_CBShowJournals)
         {
-            if (m_BtnEvents.isChecked())
+            if (m_CBShowJournals.isChecked())
             {
-                m_EventsAdapter = null;
-                m_EventsAdapter = new EventsAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
-                m_EventList.setAdapter(m_EventsAdapter);
-                m_EventsAdapter.Refresh();
-                m_EventList.setVisibility(View.VISIBLE);
+                ResetEventList();
             }
             else {
                 m_EventList.setVisibility(View.GONE);
-                Zoom(null);
+                Zoom(m_PtFirst, m_PtFurthestFromFirst);
             }
 
         }
+    }
 
-        if (v == m_BtnLegend)
+    protected class FilterDataPkt
+    {
+        public LocalDate m_Date;
+        public long m_nDay;
+
+        FilterDataPkt(LocalDate Date, long nDay)
         {
-            if (m_BtnLegend.isChecked())
-            {
+            m_Date = Date;
+            m_nDay = nDay;
+        }
+    }
+
+    private ArrayList <TabMap.FilterDataPkt> m_DataList = new ArrayList<>();
+
+    private void LoadFilterData()
+    {
+        if (m_MDR.Id < 0)
+            return;
+        GpsDataTable Tab = new GpsDataTable();
+        GpsDataTable.DataRecord DR;
+
+        m_DataList.clear();
+        Tab.QueryAll(m_MDR.Id);
+        TabMap.FilterDataPkt Last = null;
+        while ((DR = Tab.GetNextRecord()) != null)
+        {
+            LocalDate date = Utils.GetDateFromString(DR.Date);
+            long nDays = Utils.CalculateDays(m_MDR.StartDate, DR.Date);
+            if (Last == null) {
+                Last = new TabMap.FilterDataPkt(date, nDays);
+                m_DataList.add(Last);
+            }
+            else {
+                if (Last.m_nDay != nDays) {
+                    Last = new TabMap.FilterDataPkt(date, nDays);
+                    m_DataList.add(Last);
+                }
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    // Filter spinner adapter
+
+    private class DaysListAdapter extends BaseAdapter implements SpinnerAdapter
+    {
+        @Override
+        public int getCount() {
+            return m_DataList.size() + 1;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            Log.d(TAG,"DaysListAdapter::getItem position: " + position);
+            if (position == 0) {
+                return null;
+            }
+            return m_DataList.get(position-1);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            return getCustomView(position, convertView, parent, false);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent, true);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent, boolean bFullTransparency)
+        {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(m_ThisWIndow.getContext()).inflate(R.layout.daylist_row, parent, false);
             }
 
+            String sOut = getResources().getString(R.string.all_trip);
+            View Line = convertView.findViewById(R.id.legend);
+
+            if (position > 0)
+            {
+                TabMap.FilterDataPkt Data = (TabMap.FilterDataPkt) getItem(position);
+                DayOfWeek nDow = Data.m_Date.getDayOfWeek();
+                String sDow = nDow.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+                Month nMonth = Data.m_Date.getMonth();
+                String sMonth = nMonth.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+                sOut = String.format("Day %d: %s %s %d", Data.m_nDay, sDow, sMonth, Data.m_Date.getDayOfMonth());
+
+                Line.setVisibility(View.VISIBLE);
+                int ColorList[] = Utils.GetColorList();
+                int nClrSize = ColorList.length;
+                int color = ColorList[(int)Data.m_nDay % nClrSize];
+                int ActualColor = ContextCompat.getColor(m_ThisWIndow.getContext(), color);
+                Line.setBackgroundColor(ActualColor);
+            }
+            else
+            {
+                sOut = getResources().getString(R.string.all_trip);
+                Line.setVisibility(View.GONE);
+            }
+
+            TextView v = (TextView) convertView.findViewById(R.id.listitem);
+            v.setText(sOut);
+            if (bFullTransparency) {
+                convertView.setBackgroundResource(R.color.fulltransparent);
+                v.setTextColor(ContextCompat.getColor(convertView.getContext(), R.color.white));
+            }
+
+            return convertView;
         }
     }
 
@@ -469,7 +632,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         public void Refresh()
         {
             fragmentList.clear();
-            m_NotesTable.QueryAllForMap(m_MDR.Id);
+            m_NotesTable.QueryAllForMap(m_MDR.Id, m_sFilterDate);
             Log.d(TAG, "Clearing out and doing a new Query..");
             NotesTable.DataRecord JDR;
             int nItem = 0;

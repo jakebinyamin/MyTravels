@@ -25,6 +25,7 @@
     <string name="going_for">Going for %d Days!</string>
     <string name="gps_checkbox">Follow your route on the map with GPS</string>
     <string name="status">Status:</string>
+    <string name="view_journals">View Journal Entries</string>
     <string name="still_not_complete">(Still In Progress)</string>
     <string name="start_instructions">Tap the record button below to begin..</string>
     <string name="yes">Yes</string>
@@ -42,7 +43,8 @@
     <string name="create">Create</string>
     <string name="select">Select</string>
     <string name="remove">Remove</string>
-    <string name="filter">Filter</string>
+    <string name="filter">Show: </string>
+    <string name="all_trip">Entire Trip</string>
     <string name="events">Events</string>
     <string name="legend">Legend</string>
     <string name="title_activity_dlg_filter">DlgFilter</string>

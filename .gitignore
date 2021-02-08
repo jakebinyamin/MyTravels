@@ -8,6 +8,7 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 .DS_Store
+/Map API key.txt
 /build
 /captures
 .externalNativeBuild

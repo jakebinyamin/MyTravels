@@ -148,7 +148,16 @@ public class DlgFilter extends Activity implements ListView.OnItemClickListener
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent)
+        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent)
         {
             if (convertView == null) {
                 convertView = LayoutInflater.from(DlgFilter.this).inflate(R.layout.daylist_row, parent, false);
