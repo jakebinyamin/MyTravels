@@ -7,7 +7,7 @@
         />
 
     <item
-        android:drawable="@drawable/ship"
+        android:drawable="@drawable/business"
         android:width="15dp"
         android:height="15dp"
         android:left="3dp"

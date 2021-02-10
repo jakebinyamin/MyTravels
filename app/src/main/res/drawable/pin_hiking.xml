@@ -7,11 +7,11 @@
         />
 
     <item
-        android:drawable="@drawable/bus"
-        android:width="15dp"
-        android:height="15dp"
-        android:left="3dp"
-        android:top="1dp">
+        android:drawable="@drawable/hiking"
+        android:width="13dp"
+        android:height="13dp"
+        android:left="4dp"
+        android:top="2.5dp">
     </item>
 
 </layer-list>

@@ -7,11 +7,11 @@
         />
 
     <item
-        android:drawable="@drawable/train"
-        android:width="11dp"
-        android:height="11dp"
-        android:left="4.7dp"
-        android:top="3dp">
+        android:drawable="@drawable/excercise"
+        android:width="15dp"
+        android:height="15dp"
+        android:left="3.5dp"
+        android:top="1dp">
     </item>
 
 </layer-list>
