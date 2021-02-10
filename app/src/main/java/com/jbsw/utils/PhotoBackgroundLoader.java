@@ -65,8 +65,10 @@ public class PhotoBackgroundLoader
         //
         // Check if ImageView is used by something else now
         String sFileToLoad = m_Map.get(v);
-        if(sFileToLoad==null || !sFileToLoad.equals(sPhoto))
+        if(sFileToLoad==null || !sFileToLoad.equals(sPhoto)) {
+            Log.d(TAG, "ImageView Reused: " + sFileToLoad);
             return true;
+        }
 
         return false;
     }
@@ -80,40 +82,6 @@ public class PhotoBackgroundLoader
             m_sPhoto = sPhoto;
         }
 
-//        private Bitmap LoadImage(String sPhoto)
-//        {
-//            try {
-//                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//                bmOptions.inJustDecodeBounds = true;
-//                BitmapFactory.decodeFile(m_sPhoto, bmOptions);
-//                int scaleFactor = 4;
-//
-//                // Decode the image file into a Bitmap sized to fill the View
-//                bmOptions.inJustDecodeBounds = false;
-//                bmOptions.inSampleSize = scaleFactor;
-//                Bitmap myBitmap = BitmapFactory.decodeFile(m_sPhoto, bmOptions);
-//
-//                ExifInterface exif = new ExifInterface(sPhoto);
-//                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-//                Log.d("EXIF", "Exif: " + orientation);
-//                Matrix matrix = new Matrix();
-//                if (orientation == 6) {
-//                    matrix.postRotate(90);
-//                }
-//                else if (orientation == 3) {
-//                    matrix.postRotate(180);
-//                }
-//                else if (orientation == 8) {
-//                    matrix.postRotate(270);
-//                }
-//                myBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true); // rotating bitmap
-//                return myBitmap;
-//            }
-//            catch (Exception e) {
-//                Log.e(TAG, "Loading sPhoto: " + m_sPhoto + " " + e.getMessage());
-//                return null;
-//            }
-//        }
 
         @Override
         public void run() {
@@ -121,15 +89,6 @@ public class PhotoBackgroundLoader
                 return;
 
             try {
-//                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//                bmOptions.inJustDecodeBounds = true;
-//                BitmapFactory.decodeFile(m_sPhoto, bmOptions);
-//                int scaleFactor = 4;
-//
-//                // Decode the image file into a Bitmap sized to fill the View
-//                bmOptions.inJustDecodeBounds = false;
-//                bmOptions.inSampleSize = scaleFactor;
-//                Bitmap myBitmap = BitmapFactory.decodeFile(m_sPhoto, bmOptions);
 
                 Bitmap myBitmap = Utils.LoadImage(m_sPhoto);
 
@@ -162,8 +121,10 @@ public class PhotoBackgroundLoader
         {
             if (ImageViewReused(m_View, m_sPhoto))
                 return;
-            if (m_Bitmap == null)
+            if (m_Bitmap == null) {
+                Log.d(TAG, "m_Bitmap is null");
                 return;
+            }
             m_View.setImageBitmap(m_Bitmap);
             if (m_bRoundedEdge)
                 m_View.setClipToOutline(true);

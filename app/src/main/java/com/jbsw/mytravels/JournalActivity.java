@@ -178,7 +178,8 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PHOTO && resultCode == PhotoViewer.RESULT_OK) {
             int nPos = data.getIntExtra(PhotoViewer.IntentPosn, -1);

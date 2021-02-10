@@ -1,7 +1,10 @@
 package com.jbsw.mytravels;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -117,5 +120,4 @@ public class JournalActivityBase extends AppCompatActivity implements PhotoListV
 
         startActivityForResult(photoIntent, REQUEST_PHOTO);
     }
-
 }

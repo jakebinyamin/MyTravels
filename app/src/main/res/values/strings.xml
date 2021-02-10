@@ -91,6 +91,7 @@
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="lets_start">Lets Start</string>
+    <string name="loading_map">Loading Map...</string>
 
 
     <string-array name="trip_status_array">
@@ -106,18 +107,19 @@
         <item>If you would like to continue recording this Journey tap the Continue button above.</item>
     </string-array>
     <string-array name="event_types_array">
-        <item>Journal Entry</item>
+        <item>Thoughts</item>
         <item>Flight</item>
-        <item>Wine and Dine</item>
+        <item>Meal</item>
         <item>Relaxing</item>
-        <item>Exploring the sites</item>
+        <item>Exploring</item>
         <item>Accommodation</item>
         <item>Shopping</item>
-        <item>Train trip</item>
+        <item>Travel</item>
+        <item>Business</item>
         <item>Work</item>
         <item>Sport</item>
-        <item>Bus trip</item>
-        <item>Boat trip</item>
+        <item>Excercise</item>
+        <item>Hiking</item>
     </string-array>
 
 </resources>

@@ -11,6 +11,9 @@ public class BaseTable
 
     public int GetRecordCount()
     {
+        if (m_Cur == null)
+            return 0;
+
         return m_Cur.getCount();
     }
 

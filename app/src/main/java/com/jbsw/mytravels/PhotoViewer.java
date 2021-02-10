@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +41,39 @@ public class PhotoViewer extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_viewer);
 
+        LoadInThread Thrd = new LoadInThread();
+        Thrd.execute();
+
+//        Initialise();
+    }
+
+    private class LoadInThread extends AsyncTask<Object,Void,String>
+    {
+//        private ProgressDialog dialog;
+//        @Override
+//        protected void onPreExecute()
+//        {
+//            dialog = new ProgressDialog(PhotoViewer.this);
+//            dialog.setMessage(getString(R.string.loading_map));
+//            dialog.show();
+//        }
+
+        @Override
+        protected String doInBackground(Object... objects) {
+            Initialise();
+            return null;
+        }
+//        @Override
+//        protected void onPostExecute(String str)
+//        {
+//            if (dialog.isShowing())
+//                dialog.dismiss();
+//        }
+    }
+
+
+    private void Initialise()
+    {
         m_BtnBack = (ImageButton) findViewById(R.id.back);
         m_BtnBack.setOnClickListener(this);
 
@@ -84,6 +119,7 @@ public class PhotoViewer extends AppCompatActivity implements View.OnClickListen
     {
         if (v == m_BtnBack)
         {
+            Log.d(TAG, "Back pressed");
             finish();
         }
 

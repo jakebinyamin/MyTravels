@@ -83,7 +83,6 @@ public class TabJournal extends Fragment implements View.OnClickListener
         super.onResume();
         Log.d(TAG,"In onResume");
         m_JournalAdapter.Refresh();
-        m_JournalAdapter.notifyDataSetChanged();
         UpdateViews();
     }
 

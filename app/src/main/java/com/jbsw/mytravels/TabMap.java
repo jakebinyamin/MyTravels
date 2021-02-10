@@ -1,5 +1,6 @@
 package com.jbsw.mytravels;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -10,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -106,9 +108,8 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
     private float m_GreatestDistance;
     private LatLng m_PtFirst = null, m_PtFurthestFromFirst = null, m_PtLast = null;
 
-    public TabMap() {
-        Log.d(TAG, "Constructor...");
-    }
+//    public TabMap() {
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -121,12 +122,54 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 //        super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "In onViewCreated");
+        Log.d(TAG, "In onViewCreated processing Initialise");
 
+        InitialiseInThread InitAsync = new InitialiseInThread(view);
+        InitAsync.execute();
 
-        Initialise(view);
-        m_bInitialising = false;
+//        Initialise(view);
+        Log.d(TAG, "In onViewCreated Initialise complete");
     }
+
+    private class InitialiseInThread extends AsyncTask<Object,Void,String>
+    {
+        private View m_View;
+        private ProgressDialog dialog;
+
+        protected void onPreExecute()
+        {
+        }
+        public InitialiseInThread(View view)
+        {
+            m_View = view;
+            dialog = new ProgressDialog(getActivity());
+        }
+
+        @Override
+        protected String doInBackground(Object... objects)
+        {
+            Log.d(TAG, "In thread");
+            Initialise(m_View);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String str)
+        {
+//            dialog.setMessage(getString(R.string.loading_map));
+//            dialog.show();
+            Log.d(TAG, "Loading MapView");
+            m_MapView = m_ThisWIndow.findViewById(R.id.mapView);
+            m_MapView.onCreate(null);
+            m_MapView.onResume();
+            m_MapView.getMapAsync(TabMap.this);
+
+            Log.d(TAG, "Completed Loading MapView");
+//            if (dialog.isShowing())
+//                dialog.dismiss();
+        }
+    }
+
 
     private  int pxToDp(int px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
@@ -141,7 +184,9 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         m_CBShowJournals.setOnClickListener(this);
         m_CBShowJournals.setChecked(false);
 
+        Log.d(TAG, "Before LoadFilterData");
         LoadFilterData();
+        Log.d(TAG, "After LoadFilterData");
         m_Spinner = m_ThisWIndow.findViewById(R.id.filter);
         m_DaysListAdapter = new DaysListAdapter();
         m_Spinner.setAdapter(m_DaysListAdapter);
@@ -152,30 +197,23 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         m_EventListener = new EventListener();
         m_EventList.registerOnPageChangeCallback(m_EventListener);
 
-
-        //
-        // Setup Photo Adapter
-//        if (!m_bInitialised)
-//        m_EventsAdapter = new EventsAdapter(this /*getActivity().getSupportFragmentManager()*/);
         m_EventsAdapter = new EventsAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
 
         m_EventList.setAdapter(m_EventsAdapter);
         m_EventList.setPageTransformer( new MarginPageTransformer(pxToDp(40)));
         m_EventList.setOffscreenPageLimit(3);
         m_EventList.setVisibility(View.GONE);
-
-
-        m_MapView = m_ThisWIndow.findViewById(R.id.mapView);
-        if (m_MapView != null) {
-            m_MapView.onCreate(null);
-            m_MapView.onResume();
-            m_MapView.getMapAsync(this);
-        }
     }
 
     @Override
     public void onResume() {
+        Log.d(TAG, "onResume");
         super.onResume();
+
+        if (m_bInitialising)
+            return;
+
+        Log.d(TAG, "Processing onResume");
         m_MapView.onResume();
 
         Prefs prefs = new Prefs(this.getContext());
@@ -184,17 +222,24 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             m_sFilterDate = null;
             BuildMap();
         }
-        Log.d(TAG, "onResume");
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
+        ProgressDialog dialog = new ProgressDialog(getActivity());
+        dialog.setMessage(getString(R.string.loading_map));
+        dialog.show();
+
+        Log.d(TAG, "In onMapReady");
         MapsInitializer.initialize(getContext());
         m_Map = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        m_bInitialising = false;
         BuildMap();
+        dialog.dismiss();
+        Log.d(TAG, "In onMapReady BuildMap complete");
     }
 
 
@@ -234,7 +279,6 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         if (m_bInitialising)
             return;
 
-        Log.d(TAG, "Spinner has changed");
         if (position == 0) {
             m_sFilterDate = null;
         }
@@ -528,7 +572,6 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
 
         @Override
         public Object getItem(int position) {
-            Log.d(TAG,"DaysListAdapter::getItem position: " + position);
             if (position == 0) {
                 return null;
             }
@@ -638,7 +681,6 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             int nItem = 0;
             while ((JDR = m_NotesTable.GetNextRecord()) != null)
             {
-                Log.d(TAG, "Adding Journal Record: " + JDR.sTitle);
                 Fragment Frag = EventCardFragment.newInstance(m_NotesTable, m_MDR.StartDate, nItem++);
                 fragmentList.add(Frag);
             }

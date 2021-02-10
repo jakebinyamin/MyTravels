@@ -3,6 +3,7 @@ package com.jbsw.mytravels;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,9 +52,26 @@ public class JournalAdapter extends BaseAdapter
         Refresh();
     }
 
+    private class RefreshInThread extends AsyncTask<Object,Void,String>
+    {
+        @Override
+        protected String doInBackground(Object... objects) {
+            m_NotesTable.QueryAllForId(m_Id);
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String str)
+        {
+            notifyDataSetChanged();
+        }
+    }
+
     public void Refresh()
     {
-        m_NotesTable.QueryAllForId(m_Id);
+        RefreshInThread Thrd = new RefreshInThread();
+        Thrd.execute();
+//        m_NotesTable.QueryAllForId(m_Id);
+//        notifyDataSetChanged();
     }
 
     @Override
@@ -124,18 +142,10 @@ public class JournalAdapter extends BaseAdapter
         }
         else
         {
+            PhotoView.setVisibility(View.VISIBLE);
             PhotoLinkTable.DataRecord PhotoDr;
             PhotoDr = TabPhotos.GetNextRecord();
             m_BkgLoader.LoadPhoto(PhotoDr.sPath, PhotoView);
-//            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//            bmOptions.inJustDecodeBounds = false;
-//            bmOptions.inSampleSize = 4;
-//            Bitmap bm = null;
-//            bm = BitmapFactory.decodeFile(PhotoDr.sPath, bmOptions);
-//            if (bm != null) {
-//                PhotoView.setImageBitmap(bm);
-//                PhotoView.setClipToOutline(true);
-//            }
         }
 
         return convertView;

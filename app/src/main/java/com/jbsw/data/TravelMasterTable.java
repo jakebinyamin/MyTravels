@@ -138,7 +138,7 @@ public class TravelMasterTable extends BaseTable
         return DoQuery(QUERY_TABLE_MASTER_INPROGRESS) > 0;
     }
 
-    public boolean QueryALl()
+    public boolean QueryAll()
     {
         String sQuery = QUERY_TABLE_MASTER_ALL + ORDERBY_CLAUSE;
         DBManager DBM = DBManager.Get();
@@ -161,6 +161,9 @@ public class TravelMasterTable extends BaseTable
 
     public DataRecord GetNextRecord()
     {
+        if (m_Cur == null)
+            return null;
+
         if (!m_Cur.moveToNext())
             return null;
 
@@ -169,6 +172,9 @@ public class TravelMasterTable extends BaseTable
 
     public DataRecord GetDataAtPosition(int nPos)
     {
+        if (m_Cur == null)
+            return null;
+
         if (!m_Cur.moveToPosition(nPos))
             return null;
 

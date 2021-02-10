@@ -57,14 +57,15 @@ public class Utils
     static public int[] GetIconList()
     {
         final int IconList[] = {R.drawable.pen, R.drawable.airplane, R.drawable.eat, R.drawable.relax, R.drawable.explore, R.drawable.hotel,
-                R.drawable.shopping, R.drawable.train, R.drawable.work, R.drawable.sport, R.drawable.bus, R.drawable.ship};
+                R.drawable.shopping, R.drawable.bus, R.drawable.business, R.drawable.work, R.drawable.sport, R.drawable.excercise, R.drawable.hiking};
         return IconList;
     }
 
     static public int[] GetMapList()
     {
         final int IconList[] = {R.drawable.pin_pen, R.drawable.pin_plane, R.drawable.pin_eat, R.drawable.pin_relax, R.drawable.pin_explore, R.drawable.pin_hotel,
-                R.drawable.pin_shopping, R.drawable.pin_train, R.drawable.pin_work, R.drawable.pin_sport, R.drawable.pin_bus, R.drawable.pin_ship};
+                R.drawable.pin_shopping, R.drawable.pin_travel, R.drawable.pin_business, R.drawable.pin_work, R.drawable.pin_sport, R.drawable.pin_excercise, R.drawable.pin_hiking
+        };
         return IconList;
     }
 

@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         m_DBAdapter.Refresh();
         SetupUX();
-        m_DBAdapter.notifyDataSetChanged();
     }
 
     private void SetupUX()

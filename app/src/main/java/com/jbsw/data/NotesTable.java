@@ -68,17 +68,18 @@ public class NotesTable extends BaseTable
     // Data Types
     public static final int    DataText          = 0;
     public static final int    DataFlight        = 1;
-    public static final int    DataEat           = 2;
+    public static final int    DataMeal          = 2;
     public static final int    DataRelaxing      = 3;
     public static final int    DataExplore       = 4;
-    public static final int    DataHotel         = 5;
+    public static final int    DataAccommodation = 5;
     public static final int    DataShopping      = 6;
-    public static final int    DataTrain         = 7;
-    public static final int    DataWork          = 8;
-    public static final int    DataSport         = 9;
-    public static final int    DataBus           = 10;
-    public static final int    DataShip          = 11;
-    public static final int    MAX_TYPES         = 12;
+    public static final int    DataTravel        = 7;
+    public static final int    DataBusiness      = 8;
+    public static final int    DataWork          = 9;
+    public static final int    DataSport         = 10;
+    public static final int    DataExcercise     = 11;
+    public static final int    DataHike          = 12;
+    public static final int    MAX_TYPES         = 13;
 
     public class DataRecord
     {
@@ -233,6 +234,9 @@ public class NotesTable extends BaseTable
 
     public DataRecord GetDataAtPosition(int nPos)
     {
+        if (m_Cur == null)
+            return null;
+
         if (!m_Cur.moveToPosition(nPos))
             return null;
 
@@ -241,6 +245,9 @@ public class NotesTable extends BaseTable
 
     public DataRecord GetNextRecord()
     {
+        if (m_Cur == null)
+            return null;
+
         if (!m_Cur.moveToNext())
             return null;
 

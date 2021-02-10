@@ -24,5 +24,6 @@
     <dimen name="dim_topbar_text">18sp</dimen>
     <dimen name="dim_form_text">18sp</dimen>
     <dimen name="dim_body_text">14sp</dimen>
-    <dimen name="dim_photolist_h">60dp</dimen>
+    <dimen name="dim_photolist_h">75dp</dimen>
+    <dimen name="dim_map_legend_text_size">14sp</dimen>
 </resources>

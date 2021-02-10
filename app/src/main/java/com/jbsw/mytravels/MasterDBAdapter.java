@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +49,24 @@ public class MasterDBAdapter extends BaseAdapter
         Refresh();
     }
 
+    private class RefreshInThread extends AsyncTask<Object,Void,String>
+    {
+        @Override
+        protected String doInBackground(Object... objects) {
+            m_bRecordsExist = m_MasterTable.QueryAll();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String str)
+        {
+            notifyDataSetChanged();
+        }
+    }
+
     public void Refresh()
     {
-        m_bRecordsExist = m_MasterTable.QueryALl();
+        RefreshInThread Thrd = new RefreshInThread();
+        Thrd.execute();
     }
 
     public boolean RecordsExist()
