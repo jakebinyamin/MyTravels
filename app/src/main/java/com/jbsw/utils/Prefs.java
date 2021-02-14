@@ -35,7 +35,8 @@ public class Prefs
     {
         SharedPreferences.Editor editor = m_Pref.edit();
         boolean bRetVal = m_Pref.getBoolean(PrefJournalChange, false);
-        editor.remove(PrefJournalChange);
+        editor.putBoolean(PrefJournalChange, false);
+//        editor.remove(PrefJournalChange);
         editor.commit();
         return bRetVal;
     }

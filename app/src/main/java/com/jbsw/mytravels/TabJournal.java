@@ -61,16 +61,16 @@ public class TabJournal extends Fragment implements View.OnClickListener
         m_BtnCreateEntry.setOnClickListener(this);
         m_List = (ListView) m_ThisWIndow.findViewById(R.id.journal_list);
         m_DR = m_Parent.GetDataRecord();
-        m_JournalAdapter = new JournalAdapter(m_ThisWIndow.getContext(), m_DR.Id, m_DR.StartDate);
+        m_JournalAdapter = new JournalAdapter(this, m_DR.Id, m_DR.StartDate);
         m_List.setAdapter(m_JournalAdapter);
         m_List.setOnItemClickListener(new ItemSelectedListener());
         ImageView Img = (ImageView) m_ThisWIndow.findViewById(R.id.image);
         Img.setClipToOutline(true);
 
-        UpdateViews();
+//        UpdateViews();
     }
 
-    private void UpdateViews()
+    public void UpdateViews()
     {
         boolean bNoRecords = m_JournalAdapter.getCount() <= 0;
         LinearLayout NoRecs = (LinearLayout) m_ThisWIndow.findViewById(R.id.journal_none);

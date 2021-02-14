@@ -114,6 +114,15 @@ public class NotesTable extends BaseTable
 //        GpsTracker Tracker = new GpsTracker();
 //        Location Loc = Tracker.GetLocation();
 
+        GpsTracker gps = GpsTracker.GetTracker();
+        if (gps != null) {
+            Location loc = gps.GetLocation();
+            if (loc != null) {
+                m_Longitude = loc.getLongitude();
+                m_latitude = loc.getLatitude();
+            }
+        }
+
         if (DR.nLongitude == -1)
             DR.nLongitude = m_Longitude;
         if (DR.nLatitude == -1)

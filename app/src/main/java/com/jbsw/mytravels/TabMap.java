@@ -136,37 +136,36 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         private View m_View;
         private ProgressDialog dialog;
 
-        protected void onPreExecute()
-        {
-        }
         public InitialiseInThread(View view)
         {
             m_View = view;
             dialog = new ProgressDialog(getActivity());
         }
 
+        protected void onPreExecute()
+        {
+            InitialiseInUIThread(m_View);
+        }
+
         @Override
         protected String doInBackground(Object... objects)
         {
-            Log.d(TAG, "In thread");
+            Log.d(TAG, "In thread Initialise");
             Initialise(m_View);
+            Log.d(TAG, "Thread Complete Initialise");
+
             return null;
         }
 
         @Override
         protected void onPostExecute(String str)
         {
-//            dialog.setMessage(getString(R.string.loading_map));
-//            dialog.show();
-            Log.d(TAG, "Loading MapView");
+            Log.d(TAG, "onPostExecute Loading MapView");
             m_MapView = m_ThisWIndow.findViewById(R.id.mapView);
             m_MapView.onCreate(null);
             m_MapView.onResume();
             m_MapView.getMapAsync(TabMap.this);
-
-            Log.d(TAG, "Completed Loading MapView");
-//            if (dialog.isShowing())
-//                dialog.dismiss();
+            Log.d(TAG, "onPostExecute Completed Loading MapView");
         }
     }
 
@@ -175,8 +174,9 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
-    private void Initialise(View view)
+    private void InitialiseInUIThread(View view)
     {
+        Log.d(TAG, "InitialiseInUIThread Start");
         m_Parent = (TripActivity) getActivity();
         m_MDR = m_Parent.GetDataRecord();
 
@@ -184,9 +184,6 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         m_CBShowJournals.setOnClickListener(this);
         m_CBShowJournals.setChecked(false);
 
-        Log.d(TAG, "Before LoadFilterData");
-        LoadFilterData();
-        Log.d(TAG, "After LoadFilterData");
         m_Spinner = m_ThisWIndow.findViewById(R.id.filter);
         m_DaysListAdapter = new DaysListAdapter();
         m_Spinner.setAdapter(m_DaysListAdapter);
@@ -203,6 +200,15 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         m_EventList.setPageTransformer( new MarginPageTransformer(pxToDp(40)));
         m_EventList.setOffscreenPageLimit(3);
         m_EventList.setVisibility(View.GONE);
+        Log.d(TAG, "InitialiseInUIThread Complete");
+    }
+
+    private void Initialise(View view)
+    {
+
+        Log.d(TAG, "Before LoadFilterData");
+        LoadFilterData();
+        Log.d(TAG, "After LoadFilterData");
     }
 
     @Override
@@ -221,6 +227,8 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             Log.d(TAG, "Refreshing data..");
             m_sFilterDate = null;
             BuildMap();
+            m_CBShowJournals.setChecked(false);
+            m_EventList.setVisibility(View.GONE);
         }
     }
 
@@ -228,107 +236,36 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
     public void onMapReady(GoogleMap googleMap)
     {
         ProgressDialog dialog = new ProgressDialog(getActivity());
-        dialog.setMessage(getString(R.string.loading_map));
-        dialog.show();
-
         Log.d(TAG, "In onMapReady");
         MapsInitializer.initialize(getContext());
         m_Map = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         m_bInitialising = false;
+        Log.d(TAG, "In onMapReady BuildMap started");
         BuildMap();
-        dialog.dismiss();
         Log.d(TAG, "In onMapReady BuildMap complete");
     }
 
-
-
-     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == FILTER_ACTIVITY && resultCode == DlgFilter.RESULT_OK) {
-            m_sFilterDate = data.getStringExtra(DlgFilter.PARAM_FILTER_DATE);
-            BuildMap();
-            long nDays = Utils.CalculateDays(m_MDR.StartDate, m_sFilterDate);
-            m_sFilterDate = Utils.GetReadableStringDate(m_sFilterDate);
-            if (m_sFilterDate != null) {
-                String s = String.format(m_ThisWIndow.getResources().getString(R.string.view_activities_for), nDays, m_sFilterDate);
-            }
-        }
-    }
 
     private void BuildMap()
     {
         m_GreatestDistance = 0;
 
         m_Map.clear();
-        AddJournalMarkers(m_MDR.Id);
-        AddTripRoute(m_MDR.Id, m_MDR.StartDate);
+//        AddJournalMarkers(m_MDR.Id);
+//        AddTripRoute(m_MDR.Id, m_MDR.StartDate);
 
-//        BuildMapInBkg MapLoader = new BuildMapInBkg(sFilterDate);
-//        Thread thread = new Thread(MapLoader);
-//        thread.start();
+        BuildMapInBkg MapLoader = new BuildMapInBkg();
+        Thread thread = new Thread(MapLoader);
+        thread.start();
     }
 
-    //
-    // Methods for when an item selected from, spinner
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-    {
-        if (m_bInitialising)
-            return;
-
-        if (position == 0) {
-            m_sFilterDate = null;
-        }
-        else {
-            FilterDataPkt Data = m_DataList.get(position-1);
-            m_sFilterDate = String.format("%d-%02d-%02d", Data.m_Date.getYear(), Data.m_Date.getMonthValue(), Data.m_Date.getDayOfMonth());
-        }
-
-        if (m_CBShowJournals.isChecked())
-        {
-            m_EventList.setVisibility(View.GONE);
-            ResetEventList();
-        }
-        BuildMap();
-    }
-
-    private void ResetEventList()
-    {
-        m_EventsAdapter = null;
-        m_EventsAdapter = new EventsAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
-        m_EventList.setAdapter(m_EventsAdapter);
-        m_EventsAdapter.Refresh();
-        m_EventList.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 
     private class BuildMapInBkg implements Runnable
     {
-        private String m_sFilterDate;
-        public BuildMapInBkg(String sFilterDate)
-        {
-            m_sFilterDate = sFilterDate;
-        }
-
         @Override
         public void run() {
-            getActivity().runOnUiThread(
-            new Runnable() {
-                @Override
-                public void run() {
-                    m_Map.clear();
-                }
-            });
-
-            m_GreatestDistance = 0;
-
             AddJournalMarkers(m_MDR.Id);
             AddTripRoute(m_MDR.Id, m_MDR.StartDate);
         }
@@ -340,10 +277,12 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
 
         //
         // build the correct Query
+        Log.d(TAG, "STarting route qry");
         if (m_sFilterDate == null)
             Tab.QueryAll(Id);
         else
             Tab.QueryForDate(Id, m_sFilterDate);
+        Log.d(TAG, "Ending route qry");
 
         LatLng Pt = null,PtLast = null;
         m_PtFirst = null;
@@ -375,16 +314,21 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
 
                 final LatLng InnerPtLast = PtLast;
                 final LatLng InnerPt = Pt;
-                getActivity().runOnUiThread(
-                new Runnable() {
-                   public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
                        Polyline polyline1 = m_Map.addPolyline(new PolylineOptions().clickable(false).add(InnerPtLast, InnerPt).color(ActualColor)); //Color.RED
-                   }
+                    }
                 });
             }
         }
 
-        Zoom(m_PtFirst, m_PtFurthestFromFirst);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Zoom(m_PtFirst, m_PtFurthestFromFirst);
+            }
+         });
     }
 
     private void Zoom(LatLng PtFirst, LatLng PtLast)
@@ -467,7 +411,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         LatLng Pt = null;
         while ((JDR = Tab.GetNextRecord()) != null)
         {
-            if (JDR.nLatitude != -1 || JDR.nLongitude != -1)
+//            if (JDR.nLatitude != -1 || JDR.nLongitude != -1)
             {
                 Pt = new LatLng(JDR.nLatitude, JDR.nLongitude);
                 final int IconList[] = Utils.GetMapList();
@@ -488,6 +432,44 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         }
     }
 
+    //
+    // Methods for when an item selected from, spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        if (m_bInitialising)
+            return;
+
+        if (position == 0) {
+            m_sFilterDate = null;
+        }
+        else {
+            FilterDataPkt Data = m_DataList.get(position-1);
+            m_sFilterDate = String.format("%d-%02d-%02d", Data.m_Date.getYear(), Data.m_Date.getMonthValue(), Data.m_Date.getDayOfMonth());
+        }
+
+        if (m_CBShowJournals.isChecked())
+        {
+            ResetEventList();
+        }
+        BuildMap();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
+    private void ResetEventList()
+    {
+        m_EventList.setVisibility(View.GONE);
+        m_EventsAdapter = null;
+        m_EventsAdapter = new EventsAdapter(getActivity().getSupportFragmentManager(), getLifecycle());
+        m_EventList.setAdapter(m_EventsAdapter);
+        m_EventsAdapter.Refresh();
+        m_EventList.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onClick(View v)
@@ -509,9 +491,12 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         {
             if (m_CBShowJournals.isChecked())
             {
+                Log.d(TAG, "Checkbox checked - b4 ResetEventList");
                 ResetEventList();
+                Log.d(TAG, "Checkbox checked - after ResetEventList");
             }
             else {
+                Log.d(TAG, "Checkbox off");
                 m_EventList.setVisibility(View.GONE);
                 Zoom(m_PtFirst, m_PtFurthestFromFirst);
             }

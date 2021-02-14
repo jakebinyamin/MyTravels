@@ -54,6 +54,8 @@
     <string name="view_events_on_the_map">View events on the map</string>
     <string name="view_activities_for">Viewing: Day %d %s</string>
     <string name="save">Save</string>
+    <string name="lastgps">%s Last GPS at %s</string>
+    <string name="notificationmessage">No Current Journeys monitoring GPS</string>
     <string name="delete_journal_entry">Delete Journal Entry</string>
     <string name="edit_map_location">Edit map location</string>
     <string name="long_tap_new_loc">Tap on a new location..</string>

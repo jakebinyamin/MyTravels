@@ -33,19 +33,22 @@ public class MasterDBAdapter extends BaseAdapter
 {
     private static final String TAG = "TAGMasterDBAdapter";
     private TravelMasterTable m_MasterTable;
-    private Context m_Context;
+//    private Context m_Context;
+    private MainActivity m_Main;
     private LayoutInflater m_inflter;
     private PhotoBackgroundLoader m_BkgLoader;
     private boolean m_bRecordsExist;
 
-    public MasterDBAdapter(Context context)
+//    public MasterDBAdapter(Context context)
+    public MasterDBAdapter(MainActivity Main)
     {
-        m_inflter = (LayoutInflater.from(context));
-        m_Context = context;
+        m_Main = Main;
+        m_inflter = (LayoutInflater.from(m_Main));
+//        m_Context = context;
         m_MasterTable = new TravelMasterTable();
         m_BkgLoader = new PhotoBackgroundLoader();
         m_BkgLoader.SetNotLoadedResource(R.drawable.photo_loading_bkg);
-        m_BkgLoader.LoadDefaultBitmap(context, R.drawable.splash);
+        m_BkgLoader.LoadDefaultBitmap(m_Main, R.drawable.splash);
         Refresh();
     }
 
@@ -60,6 +63,7 @@ public class MasterDBAdapter extends BaseAdapter
         protected void onPostExecute(String str)
         {
             notifyDataSetChanged();
+            m_Main.SetupUX();
         }
     }
 
@@ -182,7 +186,7 @@ public class MasterDBAdapter extends BaseAdapter
         }
 
         String sDate = Utils.GetReadableStringDate(DR.StartDate);
-        return String.format(m_Context.getResources().getString(R.string.date_started), sDate);
+        return String.format(m_Main.getResources().getString(R.string.date_started), sDate);
     }
 
     private String GetLine3Text(TravelMasterTable.DataRecord DR)
@@ -193,13 +197,13 @@ public class MasterDBAdapter extends BaseAdapter
             LocalDate dateNow = LocalDate.now();
             String sNow = String.format("%d-%02d-%02d", dateNow.getYear(), dateNow.getMonthValue(), dateNow.getDayOfMonth());
             long nDays = Utils.CalculateDays(DR.StartDate, sNow);
-            sOut = String.format(m_Context.getResources().getString(R.string.going_for), nDays);
+            sOut = String.format(m_Main.getResources().getString(R.string.going_for), nDays);
         }
 
         if (DR.Status == TravelMasterTable.StatusComplete)
         {
             String sDate = Utils.GetReadableStringDate(DR.EndDate);
-            sOut = String.format(m_Context.getResources().getString(R.string.date_ended), sDate);
+            sOut = String.format(m_Main.getResources().getString(R.string.date_ended), sDate);
         }
 
         return sOut;

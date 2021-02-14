@@ -26,5 +26,6 @@
     <dimen name="dim_body_text">16sp</dimen>
     <dimen name="dim_photolist_h">100dp</dimen>
     <dimen name="dim_map_legend_text_size">19sp</dimen>
+    <dimen name="dim_map_legend_margin">30dp</dimen>
 
 </resources>

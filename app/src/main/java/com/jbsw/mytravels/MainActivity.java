@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
         setContentView(R.layout.main_drawer);
+        LinearLayout LayoutIntro = findViewById(R.id.no_records);
+        LayoutIntro.setVisibility(View.GONE);
 
         m_BtnCreate = (FloatingActionButton)findViewById(R.id.create_project);
         if (m_BtnCreate != null)
@@ -78,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         m_DBAdapter = new MasterDBAdapter(this);
         m_List.setAdapter(m_DBAdapter);
         m_List.setOnItemClickListener(new ItemSelectedListener());
-        SetupUX();
+
+//        SetupUX();
 
         //
         // Start the gps receiver
@@ -136,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SetupUX();
     }
 
-    private void SetupUX()
+    public void SetupUX()
     {
         LinearLayout LayoutIntro = findViewById(R.id.no_records);
         LayoutIntro.setVisibility(m_DBAdapter.RecordsExist() ? View.GONE : View.VISIBLE);

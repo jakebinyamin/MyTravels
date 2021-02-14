@@ -34,13 +34,15 @@ public class JournalAdapter extends BaseAdapter
     private NotesTable m_NotesTable;
     private long m_Id;
     private String m_StartDate;
+    private TabJournal m_TabJournal;
     private PhotoBackgroundLoader m_BkgLoader;
 
     private static final int NoteDisplayLen = 50;
 
-    public JournalAdapter(Context context, long id, String sStartDate)
+    public JournalAdapter(TabJournal TJournal, long id, String sStartDate)
     {
-        m_Context = context;
+        m_TabJournal = TJournal;
+        m_Context = TJournal.getContext();
         m_Id = id;
         m_NotesTable = new NotesTable();
         m_StartDate = sStartDate;
@@ -63,6 +65,7 @@ public class JournalAdapter extends BaseAdapter
         protected void onPostExecute(String str)
         {
             notifyDataSetChanged();
+            m_TabJournal.UpdateViews();
         }
     }
 

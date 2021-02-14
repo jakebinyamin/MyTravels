@@ -45,15 +45,21 @@ public class GpsTracker extends Service
     private static final long MIN_TIME = 1000 * 5; // 1000 * 60 * 1; // 1 minute
     private MyLocationListener m_LocatiionListener;
     NotificationCompat.Builder m_Notification;
-    NotificationManager m_NotificationManager;
+    NotificationManager m_NotificationManager = null;
     long m_Distance;
+    static public GpsTracker m_This;
 
     boolean m_isGPSEnabled = false;
 
     Context m_Context = null;
 
+    static public GpsTracker GetTracker()
+    {
+        return m_This;
+    }
     public GpsTracker()
     {
+        m_This = this;
         Log.d(TAG, "Tracker constructor");
     }
 
@@ -77,8 +83,9 @@ public class GpsTracker extends Service
 
         m_Notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText("Current Journey is monitoring your location")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentText(getResources().getString(R.string.notificationmessage))
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setNumber(0)
                 .setContentIntent(pendingIntent);
 
         if (m_NotificationManager != null)
@@ -96,8 +103,8 @@ public class GpsTracker extends Service
             return;
 
         NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID, "Foreground Service Channel", NotificationManager.IMPORTANCE_LOW);
-
-        m_NotificationManager = getSystemService(NotificationManager.class);
+        serviceChannel.setShowBadge(false);
+        m_NotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE/*NotificationManager.class*/);
         m_NotificationManager.createNotificationChannel(serviceChannel);
     }
 
@@ -125,6 +132,9 @@ public class GpsTracker extends Service
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
+
+        Location loc = GetLocation();
+        m_LocatiionListener.BroadcastLastLocation(loc);
     }
 
     @Override
@@ -148,16 +158,17 @@ public class GpsTracker extends Service
             Log.e(TAG, "Passive provider not Enabled");
         if (m_isGPSEnabled)
             Log.d(TAG, "gps is enabled..");
+
     }
 
     @SuppressLint("MissingPermission")
     public Location GetLocation()
     {
         Location MyLocation = null;
-        initializeLocationManager();
-        MyLocationListener MyListener = new MyLocationListener(LocationManager.GPS_PROVIDER);
-        m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, MyListener);
-        MyLocation = m_LocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (m_LocationManager != null) {
+            MyLocation = m_LocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Log.d(TAG, "GetLocation returned a location: " + MyLocation);
+        }
         return MyLocation;
     }
 
@@ -194,17 +205,34 @@ public class GpsTracker extends Service
             if (FilterLocation(location))
                 return;
 
+            BroadcastLastLocation(location);
+            //
+            // Broadcast the data
+//            Intent intent = new Intent();
+//            intent.setAction("com.jbw.MyTravels.LocData");
+//            intent.putExtra("Longitude", location.getLongitude());
+//            intent.putExtra("Latitude", location.getLatitude());
+//            sendBroadcast(intent);
+
+            AddRecord();
+            CheckForChangeInDistanceTracking();
+        }
+
+        private void BroadcastLastLocation(Location location)
+        {
+            if (location == null)
+                return;
+
             m_LastLocation.set(location);
 
             //
             // Broadcast the data
             Intent intent = new Intent();
             intent.setAction("com.jbw.MyTravels.LocData");
-            intent.putExtra("Longitude", location.getLongitude());
-            intent.putExtra("Latitude", location.getLatitude());
+            intent.putExtra("Longitude", m_LastLocation.getLongitude());
+            intent.putExtra("Latitude", m_LastLocation.getLatitude());
             sendBroadcast(intent);
-            AddRecord();
-            CheckForChangeInDistanceTracking();
+            Log.d(TAG, "Broadcasting location: " + location);
         }
 
         private boolean FilterLocation(Location location)
@@ -221,7 +249,7 @@ public class GpsTracker extends Service
             if(horizontalAccuracy > 100)
             {
                 Log.e(TAG, "Location filterd by Accuracy..");
-                return true;
+                return false; // DEBUG true;
             }
 
             return false;
@@ -271,13 +299,15 @@ public class GpsTracker extends Service
             {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 String date = sdf.format(new Date());
-                String sText = String.format("Last Modified for: %s at %s", sName, date);
-                Log.d(TAG, "Upodating Notification with: " + sText);
+                String sText = String.format(getResources().getString(R.string.lastgps), sName, date);
+                Log.d(TAG, "Updating Notification with: " + sText);
 
                 m_Notification.setContentText(sText);
-                if (m_NotificationManager != null)
+                m_Notification.setNumber(0);
+
+                if (m_NotificationManager != null) {
                     m_NotificationManager.notify(1, m_Notification.build());
-                Log.d(TAG, "Done....");
+                }
             }
         }
 
@@ -295,7 +325,7 @@ public class GpsTracker extends Service
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
+//            Log.e(TAG, "onStatusChanged: " + provider);
         }
     }
     //////////////////////////////////////////////////////////////////////////////
