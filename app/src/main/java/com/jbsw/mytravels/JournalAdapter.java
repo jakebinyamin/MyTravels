@@ -36,6 +36,7 @@ public class JournalAdapter extends BaseAdapter
     private String m_StartDate;
     private TabJournal m_TabJournal;
     private PhotoBackgroundLoader m_BkgLoader;
+    private boolean m_bRefreshing;
 
     private static final int NoteDisplayLen = 50;
 
@@ -66,15 +67,17 @@ public class JournalAdapter extends BaseAdapter
         {
             notifyDataSetChanged();
             m_TabJournal.UpdateViews();
+            m_bRefreshing = false;
         }
     }
 
     public void Refresh()
     {
+        if (m_bRefreshing)
+            return;
+        m_bRefreshing = true;
         RefreshInThread Thrd = new RefreshInThread();
         Thrd.execute();
-//        m_NotesTable.QueryAllForId(m_Id);
-//        notifyDataSetChanged();
     }
 
     @Override
