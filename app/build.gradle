@@ -1,15 +1,28 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\jakeb\\Dropbox\\JBSW\\keystore.jks')
+            storePassword 'Jake1Baty'
+            keyAlias 'JBSW1'
+            keyPassword 'Jake2Baty'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
 
     defaultConfig {
         applicationId "com.jbsw.mytravels"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0.5"
+        versionCode 2
+        versionName "1.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -17,7 +30,19 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+//            applicationIdSuffix '.release'
+//            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                def flavor = variant.name
+                def versionName = variant.versionName
+                def appName = "MiTravels"
+                outputFileName = "${appName}_${flavor}_${versionName}.apk"
+            }
         }
     }
 

@@ -331,6 +331,8 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
                         DBManager DBM = DBManager.Get();
                         DBM.DeleteJournalEntry(m_DR.Id);
                         Toast.makeText(JournalActivity.this, R.string.journal_deleted,Toast.LENGTH_SHORT).show();
+                        Prefs prefs = new Prefs(JournalActivity.this);
+                        prefs.MarkJournalChange();
                         finish();
                     }
                 });

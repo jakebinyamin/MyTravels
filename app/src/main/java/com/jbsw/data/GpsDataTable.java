@@ -8,6 +8,7 @@ import android.location.Location;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.jbsw.utils.Prefs;
 import com.jbsw.utils.Utils;
 
 import java.nio.charset.StandardCharsets;
@@ -69,6 +70,8 @@ public class GpsDataTable extends BaseTable
             SQLiteDatabase DB = DBM.getWritableDatabase();
             retVal = DB.insert(TABLE_GPS, null, values);
             DB.close();
+            Prefs prefs = new Prefs(DBM.GetContext());
+            prefs.MarkJournalChange();
         } catch (SQLException e) {
             Log.d(TAG, "CreateRecord failed " + retVal);
             e.printStackTrace();

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -21,6 +23,8 @@ import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.jbsw.data.DBManager;
+import com.jbsw.data.GpsDataTable;
+import com.jbsw.data.NotesTable;
 import com.jbsw.data.PhotoLinkTable;
 import com.jbsw.data.TravelMasterTable;
 
@@ -79,7 +83,6 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
         m_ViewPager.setOffscreenPageLimit(3);
         m_Tabs.addOnTabSelectedListener(new TabSelectedListener());
         m_ViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(m_Tabs));
-
     }
 
     @Override
