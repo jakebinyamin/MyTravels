@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.jbsw.data.TravelMasterTable;
+import com.jbsw.utils.GpsTracker;
 import com.jbsw.utils.Utils;
 
 import java.text.SimpleDateFormat;
@@ -175,6 +176,17 @@ public class TabGeneral extends Fragment implements View.OnClickListener
             m_Parent.UpdateData();
             SetupViews();
         }
+
+        CheckForGPSMonitor();
+    }
+
+    private void CheckForGPSMonitor()
+    {
+        GpsTracker gps  = GpsTracker.GetTracker();
+        if (gps == null)
+            return;
+
+        gps.CheckToStartGPSMonitor();
     }
 
     public TravelMasterTable.DataRecord GetDataRecord()

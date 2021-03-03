@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.jbsw.utils.GpsTracker;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -95,6 +97,10 @@ public class DBManager  extends SQLiteOpenHelper
         NotesTable.DeleteRecord(DB, Id);
         PhotoLinkTable.DeleteRecord(DB, Id);
         GpsDataTable.DeleteRecord(DB, Id);
+
+        GpsTracker gps  = GpsTracker.GetTracker();
+        if (gps != null)
+            gps.CheckToStartGPSMonitor();
 
         return true;
     }

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.jbsw.utils.GpsTracker;
 import com.jbsw.utils.Prefs;
 
 import java.io.Serializable;
@@ -201,7 +202,13 @@ public class TravelMasterTable extends BaseTable
         Log.d(TAG, "Name: " + DR.Name + " Descr: " + DR.Descr);
         String sUpdateQry = String.format(UPDATE_TABLE_MASTER, DR.Name, DR.Descr, DR.Status, DR.StartDate, DR.EndDate, DR.UseGps ? 1: 0,  DR.Id);
         Log.d(TAG, "Update Query: " + sUpdateQry);
-        return DoUpdate(sUpdateQry);
+        boolean bRetVal =  DoUpdate(sUpdateQry);
+        if (bRetVal) {
+            GpsTracker gps  = GpsTracker.GetTracker();
+            if (gps != null)
+                gps.CheckToStartGPSMonitor();
+        }
+        return bRetVal;
     }
 
     public boolean UpdatePhoto(long Id, String sPhoto)

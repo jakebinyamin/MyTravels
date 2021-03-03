@@ -47,6 +47,7 @@ public class GpsTracker extends Service
     NotificationCompat.Builder m_Notification;
     NotificationManager m_NotificationManager = null;
     long m_Distance;
+    private boolean m_bIsMonitoring = false;
     static public GpsTracker m_This;
 
     boolean m_isGPSEnabled = false;
@@ -71,6 +72,35 @@ public class GpsTracker extends Service
     }
 
     @Override
+    public void onCreate()
+    {
+        Log.d(TAG, "onCreate");
+
+        m_Context = getApplicationContext();
+        if (m_Context == null) {
+            Log.e(TAG," m_Context is null");
+            return;
+        }
+
+        initializeLocationManager();
+        m_LocatiionListener = new MyLocationListener(LocationManager.GPS_PROVIDER); //PASSIVE_PROVIDER);
+        try {
+            Prefs prefs = new Prefs(this);
+            m_Distance = prefs.GetGpsTrackerData();
+//            m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, m_LocatiionListener); // dbg
+            m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,m_Distance, m_LocatiionListener);
+//            m_LocationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,MIN_TIME,MIN_DISTANCE, m_LocatiionListener);
+        } catch (java.lang.SecurityException ex) {
+            Log.i(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+        }
+
+        Location loc = GetLocation();
+        m_LocatiionListener.BroadcastLastLocation(loc);
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Log.d(TAG, "onStartCommand");
@@ -83,16 +113,13 @@ public class GpsTracker extends Service
 
         m_Notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText(getResources().getString(R.string.notificationmessage))
+//                .setContentText(getResources().getString(R.string.notificationmessage))
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setNumber(0)
                 .setContentIntent(pendingIntent);
 
-        if (m_NotificationManager != null)
-            m_NotificationManager.notify(1, m_Notification.build());
-
-
-        startForeground(1, m_Notification.build());
+        CheckToStartGPSMonitor();
+//        startForeground(1, m_Notification.build());
 
         return START_STICKY;
     }
@@ -108,33 +135,55 @@ public class GpsTracker extends Service
         m_NotificationManager.createNotificationChannel(serviceChannel);
     }
 
-    @Override
-    public void onCreate()
+    public void CheckToStartGPSMonitor()
     {
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "In CheckToStartGPSMonitor()");
+        TravelMasterTable Master = new TravelMasterTable();
 
-        m_Context = getApplicationContext();
-        if (m_Context == null) {
-            Log.e(TAG," m_Context is null");
+        //
+        // If there is nothing to monitor then turn it off
+        if (!Master.QueryAllInProgress()) {
+            Log.d(TAG, "No Matching Master Records.. Nothing to monitor");
+            if (m_bIsMonitoring) {
+                if (m_LocationManager != null)
+                    m_LocationManager.removeUpdates(m_LocatiionListener);
+                stopForeground(true);
+                m_bIsMonitoring = false;
+                Log.d(TAG, "Nothing to monitor.. Was Monitoring GPS - Now turning off");
+            }
             return;
         }
 
-        initializeLocationManager();
-        m_LocatiionListener = new MyLocationListener(LocationManager.GPS_PROVIDER); //PASSIVE_PROVIDER);
-//        m_LocatiionListener = new MyLocationListener(LocationManager.PASSIVE_PROVIDER);
+        //
+        // If monitoring already then we are fine
+        if (m_bIsMonitoring) {
+            Log.d(TAG, "Need to monitor. Was Monitoring GPS - Nothing to do");
+            return;
+        }
+
+        //
+        // Start monitoring
+        TravelMasterTable.DataRecord MasterRec;
+        MasterRec = Master.GetNextRecord();
+        if (MasterRec == null)
+            return; // Should never get here, just being safe
+
+        Log.d(TAG, "Need to monitor. Was *NOT* Monitoring GPS - Need to monitor");
         try {
             Prefs prefs = new Prefs(this);
             m_Distance = prefs.GetGpsTrackerData();
             m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,m_Distance, m_LocatiionListener);
-//            m_LocationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,MIN_TIME,MIN_DISTANCE, m_LocatiionListener);
         } catch (java.lang.SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
 
-        Location loc = GetLocation();
-        m_LocatiionListener.BroadcastLastLocation(loc);
+        String sText = String.format(getResources().getString(R.string.notificationmessage), MasterRec.Name);
+        m_Notification.setContentText(sText);
+
+        startForeground(1, m_Notification.build());
+        m_bIsMonitoring = true;
     }
 
     @Override
@@ -148,7 +197,7 @@ public class GpsTracker extends Service
 
     private void initializeLocationManager()
     {
-        Log.e(TAG, "initializeLocationManager - LOCATION_INTERVAL: " + MIN_TIME + " LOCATION_DISTANCE: " + MIN_DISTANCE);
+        Log.e(TAG, "initializeLocationManager - LOCATION_INTERVAL: " + MIN_TIME + " LOCATION_DISTANCE: " + m_Distance);
         if (m_LocationManager == null)
             m_LocationManager = (LocationManager) m_Context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -206,13 +255,6 @@ public class GpsTracker extends Service
                 return;
 
             BroadcastLastLocation(location);
-            //
-            // Broadcast the data
-//            Intent intent = new Intent();
-//            intent.setAction("com.jbw.MyTravels.LocData");
-//            intent.putExtra("Longitude", location.getLongitude());
-//            intent.putExtra("Latitude", location.getLatitude());
-//            sendBroadcast(intent);
 
             AddRecord();
             CheckForChangeInDistanceTracking();
@@ -227,12 +269,12 @@ public class GpsTracker extends Service
 
             //
             // Broadcast the data
-            Intent intent = new Intent();
-            intent.setAction("com.jbw.MyTravels.LocData");
-            intent.putExtra("Longitude", m_LastLocation.getLongitude());
-            intent.putExtra("Latitude", m_LastLocation.getLatitude());
-            sendBroadcast(intent);
-            Log.d(TAG, "Broadcasting location: " + location);
+//            Intent intent = new Intent();
+//            intent.setAction("com.jbw.MyTravels.LocData");
+//            intent.putExtra("Longitude", m_LastLocation.getLongitude());
+//            intent.putExtra("Latitude", m_LastLocation.getLatitude());
+//            sendBroadcast(intent);
+//            Log.d(TAG, "Broadcasting location: " + location);
         }
 
         private boolean FilterLocation(Location location)

@@ -97,8 +97,8 @@ public class NotesTable extends BaseTable
     public DataRecord GetNewDataRecord()
     {
         DataRecord DR = new DataRecord();
-        DR.nLatitude = m_latitude;
-        DR.nLongitude = m_Longitude;
+        DR.nLatitude = -1;
+        DR.nLongitude = -1;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         DR.Date = sdf.format(new Date());
         DR.bShowOnMap = true;
@@ -123,9 +123,9 @@ public class NotesTable extends BaseTable
             }
         }
 
-        if (DR.nLongitude == -1)
+//        if (DR.nLongitude == -1)
             DR.nLongitude = m_Longitude;
-        if (DR.nLatitude == -1)
+//        if (DR.nLatitude == -1)
             DR.nLatitude = m_latitude;
 
         if (m_Longitude == -1 && m_latitude == -1)
