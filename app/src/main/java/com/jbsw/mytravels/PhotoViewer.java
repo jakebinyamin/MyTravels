@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +48,7 @@ public class PhotoViewer extends AppCompatActivity implements View.OnClickListen
 //        Initialise();
     }
 
+
     private class LoadInThread extends AsyncTask<Object,Void,String>
     {
 //        private ProgressDialog dialog;
@@ -70,7 +72,6 @@ public class PhotoViewer extends AppCompatActivity implements View.OnClickListen
 //                dialog.dismiss();
 //        }
     }
-
 
     private void Initialise()
     {
@@ -153,5 +154,7 @@ public class PhotoViewer extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onPageScrollStateChanged(int state) {
     }
+
     /////////////////////////////////////////////////////////////////////////////////////////
+
 }

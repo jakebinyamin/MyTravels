@@ -1,8 +1,6 @@
 package com.jbsw.mytravels;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.jbsw.utils.TouchImageView;
 import com.jbsw.utils.Utils;
-
-import java.io.File;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -37,9 +34,9 @@ public class ImageSliderFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         Log.d(TAG, "In OnCreateView of ImageSliderFragment");
-        ImageView view = null;
+        TouchImageView view = null;
         try {
-            view = (ImageView) inflater.inflate(R.layout.item_slider, container, false);
+            view = (TouchImageView) inflater.inflate(R.layout.item_slider, container, false);
             String url = getUrlFromInstance();
             Log.d(TAG, "file path in onCreateView: " + url);
             loadImage(view, url);
