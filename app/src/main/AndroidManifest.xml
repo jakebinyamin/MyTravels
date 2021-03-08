@@ -94,6 +94,7 @@
         </receiver> <!-- android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"> -->
         <service
             android:name="com.jbsw.utils.GpsTracker"
+            android:foregroundServiceType="location"
             android:enabled="true"
             android:exported="true" />
     </application>

@@ -2,9 +2,12 @@ package com.jbsw.mytravels;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -60,16 +63,21 @@ public class SplashScreen extends Activity
     {
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED)
             {
-                List<String> permissions = new ArrayList<>();
-                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-                permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-                final String[] perms = permissions.toArray(new String[permissions.size()]);
-                Log.d(TAG, "ABout to request Permission");
-                ActivityCompat.requestPermissions(this, perms, PERMISSION_CODE);
-                Log.d(TAG, "request Permission called");
+                AlertDialog ad = new AlertDialog.Builder(this)
+                        .setMessage(R.string.ask_for_permission)
+                        .setTitle(R.string.ask_for_permission_title)
+                        .setCancelable(false)
+                        .setNeutralButton(R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton){
+                                        dialog.dismiss();
+                                        GetPermissions();
+                                    }
+                                })
+                        .show();
                 return false;
             }
             else
@@ -81,6 +89,18 @@ public class SplashScreen extends Activity
             e.printStackTrace();
             return true;
         }
+    }
+
+    private void GetPermissions()
+    {
+        Log.d(TAG, "About to request Permission");
+        List<String> permissions = new ArrayList<>();
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+        final String[] perms = permissions.toArray(new String[permissions.size()]);
+        ActivityCompat.requestPermissions(this, perms, PERMISSION_CODE);
+        Log.d(TAG, "request Permission called");
     }
 
     @Override
@@ -97,18 +117,26 @@ public class SplashScreen extends Activity
         boolean grantedAll = true;
         for (int i = 0; i < grantResults.length; i++) {
             Log.d(TAG, "permission " + permissions[i] + " granted? " + (grantResults[i] == PackageManager.PERMISSION_GRANTED));
-            if ((grantResults[i] != PackageManager.PERMISSION_GRANTED))
+            if ( i < 2 && (grantResults[i] != PackageManager.PERMISSION_GRANTED)) {
+                Log.d(TAG, "ACCESS_LOCATION Not Granted");
                 grantedAll = false;
+            }
+            if (i == 2 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "ACCESS_BACKGROUND Not Granted");
+                grantedAll = false;
+            }
+
         }
 
-        StartAppAfterWait();
+//        StartAppAfterWait();
 
-//        if (grantedAll) {
-//            Log.d(TAG, "All Permissions Granted..");
-//            StartAppAfterWait();
-//        } else {
-//            finish();
-//        }
+        if (grantedAll) {
+            Log.d(TAG, "Required Permissions Granted..");
+            StartAppAfterWait();
+        } else {
+            Log.d(TAG, "Required Permissions *NOT* Granted..");
+            finish();
+        }
         return;
     }
 

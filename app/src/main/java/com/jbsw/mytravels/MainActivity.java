@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -106,10 +107,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intentIntro = new Intent(this, Intro.class);
                 startActivity(intentIntro);
                 break;
+            case R.id.menu_privacy:
+                LaunchPrivacyPolicy();
+                break;
         }
 
         m_Drawer.closeDrawer(Gravity.LEFT);
         return false;
+    }
+
+    private void LaunchPrivacyPolicy()
+    {
+        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://jbswdev.wixsite.com/mitravels/privacy-policy"));
+        startActivity(myIntent);
     }
 
     private void LaunchSettings()
