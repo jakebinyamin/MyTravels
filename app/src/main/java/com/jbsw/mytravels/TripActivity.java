@@ -27,6 +27,7 @@ import com.jbsw.data.GpsDataTable;
 import com.jbsw.data.NotesTable;
 import com.jbsw.data.PhotoLinkTable;
 import com.jbsw.data.TravelMasterTable;
+import com.jbsw.utils.GpsTracker;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -221,6 +222,14 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
         m_DR = tGeneral.GetDataRecord();
         TravelMasterTable tab = new TravelMasterTable();
         tab.UpdateRecord(m_DR);
+
+        GpsTracker tracker = GpsTracker.GetTracker();
+        if (tracker == null)
+            return;
+        Location loc = tracker.GetLocation();
+        GpsDataTable TabGps = new GpsDataTable();
+        TabGps.AddGPSRecord(m_DR.Id, loc);
+
     }
 
     private class TabSelectedListener implements OnTabSelectedListener

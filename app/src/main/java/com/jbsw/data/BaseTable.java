@@ -20,6 +20,11 @@ public class BaseTable
     public long DoQuery(String sQuery)
     {
         DBManager DBM = DBManager.Get();
+        if (DBM == null) {
+            Log.e("TAG", "DBManager not initialised");
+            return -1;
+        }
+
         SQLiteDatabase DB = DBM.getWritableDatabase();
         m_Cur = DB.rawQuery(sQuery, null);
         int nResults = m_Cur.getCount();

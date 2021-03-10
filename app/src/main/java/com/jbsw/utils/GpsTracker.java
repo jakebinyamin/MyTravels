@@ -22,6 +22,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.jbsw.data.DBManager;
 import com.jbsw.data.GpsDataTable;
 import com.jbsw.data.TravelMasterTable;
 import com.jbsw.mytravels.MainActivity;
@@ -56,6 +57,8 @@ public class GpsTracker extends Service
 
     static public GpsTracker GetTracker()
     {
+        if (m_This == null)
+            Log.e(TAG, "*** Tracker NOT CREATED ***");
         return m_This;
     }
     public GpsTracker()
@@ -84,6 +87,8 @@ public class GpsTracker extends Service
 
         initializeLocationManager();
         m_LocatiionListener = new MyLocationListener(LocationManager.GPS_PROVIDER); //PASSIVE_PROVIDER);
+
+        /*
         try {
             Prefs prefs = new Prefs(this);
             m_Distance = prefs.GetGpsTrackerData();
@@ -95,9 +100,11 @@ public class GpsTracker extends Service
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
+        */
 
-        Location loc = GetLocation();
-        m_LocatiionListener.BroadcastLastLocation(loc);
+//        Location loc = GetLocation();
+//        m_LocatiionListener.BroadcastLastLocation(loc);
+        Log.d(TAG, "onCreate completed successfully..");
     }
 
     @Override
@@ -118,9 +125,17 @@ public class GpsTracker extends Service
                 .setNumber(0)
                 .setContentIntent(pendingIntent);
 
+        //
+        // If service is starting up without Main activity, then we need to create this here.
+        if (DBManager.Get() == null) {
+            Log.d(TAG, "Creating new DBManager.");
+            DBManager.Create(getApplicationContext());
+        }
+
         CheckToStartGPSMonitor();
 //        startForeground(1, m_Notification.build());
 
+        Log.d(TAG, "onStartCommand finished after CheckToStartGPSMonitor");
         return START_STICKY;
     }
 
@@ -165,8 +180,10 @@ public class GpsTracker extends Service
         // Start monitoring
         TravelMasterTable.DataRecord MasterRec;
         MasterRec = Master.GetNextRecord();
-        if (MasterRec == null)
+        if (MasterRec == null) {
+            Log.e(TAG, "No MasterRec - Shouldnt get here");
             return; // Should never get here, just being safe
+        }
 
         Log.d(TAG, "Need to monitor. Was *NOT* Monitoring GPS - Need to monitor");
         try {
@@ -179,6 +196,7 @@ public class GpsTracker extends Service
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
 
+        Log.d(TAG, "Monitoring with Distance: " + m_Distance);
         String sText = String.format(getResources().getString(R.string.notificationmessage), MasterRec.Name);
         m_Notification.setContentText(sText);
 
@@ -197,7 +215,6 @@ public class GpsTracker extends Service
 
     private void initializeLocationManager()
     {
-        Log.e(TAG, "initializeLocationManager - LOCATION_INTERVAL: " + MIN_TIME + " LOCATION_DISTANCE: " + m_Distance);
         if (m_LocationManager == null)
             m_LocationManager = (LocationManager) m_Context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -239,10 +256,12 @@ public class GpsTracker extends Service
     private class MyLocationListener implements android.location.LocationListener
     {
         Location m_LastLocation = null;
+        String  m_sProvider;
 
         public MyLocationListener(String provider)
         {
-            m_LastLocation = new Location(provider);
+            m_sProvider = provider;
+            m_LastLocation = null;
             Log.e(TAG, "LocationListener " + provider);
         }
 
@@ -265,6 +284,8 @@ public class GpsTracker extends Service
             if (location == null)
                 return;
 
+            if (m_LastLocation == null)
+                m_LastLocation = new Location(m_sProvider);
             m_LastLocation.set(location);
 
             //
@@ -280,7 +301,7 @@ public class GpsTracker extends Service
         private boolean FilterLocation(Location location)
         {
             if (m_LastLocation != null && m_LastLocation.distanceTo(location) < m_Distance) {
-                Log.e(TAG, "Location filterd by Min Distance ..");
+                Log.e(TAG, "Location filterd by Min Distance .. mLastLocation is: " + m_LastLocation);
                 return true;
             }
             

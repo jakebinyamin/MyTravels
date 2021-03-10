@@ -336,6 +336,11 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         if (PtFirst == null || PtLast == null)
             return;
 
+        if (m_GreatestDistance < 100)
+        {
+            return;
+        }
+
         final LatLngBounds bounds = new LatLngBounds.Builder().include(PtFirst).include(PtLast).build();
         m_Map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
     }
