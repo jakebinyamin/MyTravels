@@ -223,7 +223,7 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
                 return;
             }
         }
-
+  
         if (resultCode == RESULT_OK && requestCode == EDIT_LOCATION)
         {
             m_DR.nLongitude = data.getDoubleExtra(EditJournalLocation.DataLong, -1);
