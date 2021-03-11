@@ -1,5 +1,6 @@
 package com.jbsw.mytravels;
-
+  
+  
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
