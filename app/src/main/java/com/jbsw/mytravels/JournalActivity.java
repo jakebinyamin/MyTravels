@@ -172,9 +172,14 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
         }
     }
 
-    private void PickPhotos() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, PICK_IMAGE);
+    private void PickPhotos()
+    {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(intent, PICK_IMAGE);
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+//        intent.setType("image/*");
+//        startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMAGE);
     }
 
     @Override
@@ -194,25 +199,29 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
         }
 
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            Uri imageUri = data.getData();
-            String sImageFile = getRealPathFromUri(imageUri);
-            m_PhotoList.add(sImageFile);
-            m_PhotoListAdapter.UpdateList(m_PhotoList);
-            m_PhotoListAdapter.notifyDataSetChanged();
-
-            //
-            // If it is a new record the we will add it later
-            if (m_Mode == ModeNewRecord)
+            if (data == null)
                 return;
 
             //
-            // In edit mode, keep the list up to date.
-            PhotoLinkTable TabPhotos = new PhotoLinkTable();
-            TabPhotos.AddPhoto(m_Id, m_DR.Id, sImageFile);
+            // Multiple photos selected..
+            if (data.getClipData() != null) {
+                int count = data.getClipData().getItemCount();
+                for (int i = 0; i < count; i++) {
+                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                    ProcessPhoto(imageUri);
+                    Log.d(TAG, "data.getClipData() != null - Adding Photo..");
+                }
+                return;
+            }
 
             //
-            // Add first photo to Master Table
-            AddPhotoToMaster(sImageFile);
+            // Single photo selected..
+            if (data.getData() != null) {
+                Uri imageUri = data.getData();
+                ProcessPhoto(imageUri);
+                Log.d(TAG, "data.getData() != null - Adding single Photo..");
+                return;
+            }
         }
 
         if (resultCode == RESULT_OK && requestCode == EDIT_LOCATION)
@@ -222,7 +231,30 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
         }
     }
 
-    private void AddPhotoToMaster(String sPhoto) {
+    private void ProcessPhoto(Uri imageUri)
+    {
+        String sImageFile = getRealPathFromUri(imageUri);
+        m_PhotoList.add(sImageFile);
+        m_PhotoListAdapter.UpdateList(m_PhotoList);
+        m_PhotoListAdapter.notifyDataSetChanged();
+
+        //
+        // If it is a new record the we will add it later
+        if (m_Mode == ModeNewRecord)
+            return;
+
+        //
+        // In edit mode, keep the list up to date.
+        PhotoLinkTable TabPhotos = new PhotoLinkTable();
+        TabPhotos.AddPhoto(m_Id, m_DR.Id, sImageFile);
+
+        //
+        // Add first photo to Master Table
+        AddPhotoToMaster(sImageFile);
+    }
+
+    private void AddPhotoToMaster(String sPhoto)
+    {
         if (m_sMainPhoto != null)
             return;
 
