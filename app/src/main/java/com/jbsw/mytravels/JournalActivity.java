@@ -35,6 +35,7 @@ import com.jbsw.data.NotesTable;
 import com.jbsw.data.NotesTable.DataRecord;
 import com.jbsw.data.PhotoLinkTable;
 import com.jbsw.data.TravelMasterTable;
+import com.jbsw.utils.FileUtils;
 import com.jbsw.utils.GpsTracker;
 import com.jbsw.utils.Prefs;
 import com.jbsw.utils.Utils;
@@ -175,12 +176,18 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
 
     private void PickPhotos()
     {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(intent, PICK_IMAGE);
+//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI);
+//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+////        intent.setType("image/*");
+//        startActivityForResult(intent, PICK_IMAGE);
+
 //        Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-//        intent.setType("image/*");
-//        startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMAGE);
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Image(s) "), PICK_IMAGE);
     }
 
     @Override
@@ -234,7 +241,14 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
 
     private void ProcessPhoto(Uri imageUri)
     {
-        String sImageFile = getRealPathFromUri(imageUri);
+        String sImageFile;  // = getRealPathFromUri(imageUri);
+        FileUtils fu = new FileUtils(getApplicationContext());
+        sImageFile = fu.getFilePathByUri(imageUri);
+        Log.d(TAG, "Uri: " + imageUri + " ImagePath: " + sImageFile);
+        if (sImageFile == null) {
+            Log.d(TAG, "null Image File");
+            return;
+        }
         m_PhotoList.add(sImageFile);
         m_PhotoListAdapter.UpdateList(m_PhotoList);
         m_PhotoListAdapter.notifyDataSetChanged();
@@ -274,15 +288,16 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
         Master.UpdatePhoto(MDR.Id, sPhoto);
     }
 
+
     private String getRealPathFromUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this, uri, projection, null, null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
-        int column = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
         cursor.moveToFirst();
-        String result = cursor.getString(column);
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        Log.d(TAG, "Cursor column: " + columnIndex);
+        String imageEncoded = cursor.getString(columnIndex);
         cursor.close();
-        return result;
+        return imageEncoded;
     }
 
     private void CreateRecord() {
