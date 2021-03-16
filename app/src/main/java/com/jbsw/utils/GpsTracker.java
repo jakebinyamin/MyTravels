@@ -34,6 +34,7 @@ import java.util.Date;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+@SuppressLint("MissingPermission")
 
 // TODO deal with duplicate locations coming through
 public class GpsTracker extends Service
@@ -42,12 +43,11 @@ public class GpsTracker extends Service
     public static final String CHANNEL_ID = "GpsTrackerChannel";
     private LocationManager m_LocationManager = null;
 
-    public static final long MIN_DISTANCE = 300; // 300 meters
-    private static final long MIN_TIME = 1000 * 5; // 1000 * 60 * 1; // 1 minute
-    private MyLocationListener m_LocatiionListener;
-    NotificationCompat.Builder m_Notification;
-    NotificationManager m_NotificationManager = null;
-    long m_Distance;
+    private static final long MIN_TIME = 1000 * 60; // 1 minute
+    private MyLocationListener m_GpsLocationListener;
+    private NotificationCompat.Builder m_Notification;
+    private NotificationManager m_NotificationManager = null;
+    private long m_Distance;
     private boolean m_bIsMonitoring = false;
     static public GpsTracker m_This;
 
@@ -86,25 +86,25 @@ public class GpsTracker extends Service
         }
 
         initializeLocationManager();
-        m_LocatiionListener = new MyLocationListener(LocationManager.GPS_PROVIDER); //PASSIVE_PROVIDER);
 
-        /*
-        try {
-            Prefs prefs = new Prefs(this);
-            m_Distance = prefs.GetGpsTrackerData();
-//            m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, m_LocatiionListener); // dbg
-            m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,m_Distance, m_LocatiionListener);
-//            m_LocationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,MIN_TIME,MIN_DISTANCE, m_LocatiionListener);
-        } catch (java.lang.SecurityException ex) {
-            Log.i(TAG, "fail to request location update, ignore", ex);
-        } catch (IllegalArgumentException ex) {
-            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
-        }
-        */
-
-//        Location loc = GetLocation();
-//        m_LocatiionListener.BroadcastLastLocation(loc);
         Log.d(TAG, "onCreate completed successfully..");
+    }
+
+    private void initializeLocationManager()
+    {
+        m_LocationManager = (LocationManager) m_Context.getSystemService(Context.LOCATION_SERVICE);
+        if (m_LocationManager == null) {
+            Log.e(TAG,"m_LocationManager is null..");
+            return;
+        }
+
+        m_isGPSEnabled = m_LocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        Log.e(TAG, "Network provider Enabled: " + m_LocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
+        Log.e(TAG, "Passive provider Enabled: " + m_LocationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER));
+        Log.e(TAG, "GPS provider Enabled: " + m_LocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
+
+        m_GpsLocationListener = new MyLocationListener(LocationManager.GPS_PROVIDER); //PASSIVE_PROVIDER);
     }
 
     @Override
@@ -115,8 +115,7 @@ public class GpsTracker extends Service
 
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0, notificationIntent, 0);
 
         m_Notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
@@ -133,7 +132,6 @@ public class GpsTracker extends Service
         }
 
         CheckToStartGPSMonitor();
-//        startForeground(1, m_Notification.build());
 
         Log.d(TAG, "onStartCommand finished after CheckToStartGPSMonitor");
         return START_STICKY;
@@ -160,8 +158,9 @@ public class GpsTracker extends Service
         if (!Master.QueryAllInProgress()) {
             Log.d(TAG, "No Matching Master Records.. Nothing to monitor");
             if (m_bIsMonitoring) {
-                if (m_LocationManager != null)
-                    m_LocationManager.removeUpdates(m_LocatiionListener);
+                if (m_LocationManager != null) {
+                    m_LocationManager.removeUpdates(m_GpsLocationListener);
+                }
                 stopForeground(true);
                 m_bIsMonitoring = false;
                 Log.d(TAG, "Nothing to monitor.. Was Monitoring GPS - Now turning off");
@@ -189,7 +188,7 @@ public class GpsTracker extends Service
         try {
             Prefs prefs = new Prefs(this);
             m_Distance = prefs.GetGpsTrackerData();
-            m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,m_Distance, m_LocatiionListener);
+            m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, m_Distance, m_GpsLocationListener);
         } catch (java.lang.SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
@@ -204,36 +203,33 @@ public class GpsTracker extends Service
         m_bIsMonitoring = true;
     }
 
+    private boolean IsGpsOn()
+    {
+        return m_LocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+
     @Override
     public void onDestroy()
     {
         Log.e(TAG, "onDestroy");
         super.onDestroy();
-        if (m_LocationManager != null)
-            m_LocationManager.removeUpdates(m_LocatiionListener);
+        if (m_LocationManager != null) {
+            m_LocationManager.removeUpdates(m_GpsLocationListener);
+        }
     }
 
-    private void initializeLocationManager()
-    {
-        if (m_LocationManager == null)
-            m_LocationManager = (LocationManager) m_Context.getSystemService(Context.LOCATION_SERVICE);
-
-        m_isGPSEnabled = m_LocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        if (m_LocationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))
-            Log.e(TAG, "Passive provider not Enabled");
-        if (m_isGPSEnabled)
-            Log.d(TAG, "gps is enabled..");
-
-    }
-
-    @SuppressLint("MissingPermission")
     public Location GetLocation()
     {
         Location MyLocation = null;
         if (m_LocationManager != null) {
-            MyLocation = m_LocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Log.d(TAG, "GetLocation returned a location: " + MyLocation);
+            if (m_LocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                MyLocation = m_LocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                Log.d(TAG, "GetLocation returned a location: " + MyLocation + " From: " + LocationManager.GPS_PROVIDER);
+            } else {
+                MyLocation = m_LocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                Log.d(TAG, "GetLocation returned a location: " + MyLocation + " From: " + LocationManager.PASSIVE_PROVIDER);
+            }
         }
         return MyLocation;
     }
@@ -248,27 +244,26 @@ public class GpsTracker extends Service
 
         m_Distance = lNewDistance;
         Log.d(TAG,"After Requested change in Distance tracking: " + m_Distance + " NewDistance: " + lNewDistance);
-        m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,m_Distance, m_LocatiionListener);
+        m_LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,m_Distance, m_GpsLocationListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////
     // LocationListener..
     private class MyLocationListener implements android.location.LocationListener
     {
-        Location m_LastLocation = null;
         String  m_sProvider;
+        private Location m_LastLocation = null;
 
         public MyLocationListener(String provider)
         {
             m_sProvider = provider;
-            m_LastLocation = null;
             Log.e(TAG, "LocationListener " + provider);
         }
 
         @Override
         public void onLocationChanged(Location location)
         {
-            Log.e(TAG, "onLocationChanged: " + location);
+            Log.e(TAG, "onLocationChanged: " + location + " Provider: " + m_sProvider);
 
             if (FilterLocation(location))
                 return;
@@ -285,7 +280,8 @@ public class GpsTracker extends Service
                 return;
 
             if (m_LastLocation == null)
-                m_LastLocation = new Location(m_sProvider);
+                m_LastLocation = new Location(LocationManager.GPS_PROVIDER);
+
             m_LastLocation.set(location);
 
             //
@@ -311,7 +307,7 @@ public class GpsTracker extends Service
             float horizontalAccuracy = location.getAccuracy();
             if(horizontalAccuracy > 100)
             {
-                Log.e(TAG, "Location filterd by Accuracy..");
+                Log.e(TAG, "Location filtered by Accuracy..");
                 return false; // DEBUG true;
             }
 
@@ -377,7 +373,7 @@ public class GpsTracker extends Service
         @Override
         public void onProviderDisabled(String provider)
         {
-            Log.e(TAG, "onProviderDisabled: " + provider);
+            Log.e(TAG, "onProviderDisabled: " + "-"+provider+"-"+LocationManager.GPS_PROVIDER+"-");
         }
 
         @Override
