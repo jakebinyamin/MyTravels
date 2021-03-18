@@ -20,7 +20,7 @@
     -->
     <dimen name="inner_frame_layout_padding">5dp</dimen>
 
-    <dimen name="tab_text_size">18sp</dimen>
+    <dimen name="tab_text_size">16sp</dimen>
     <dimen name="dim_topbar_text">20sp</dimen>
     <dimen name="dim_form_text">20sp</dimen>
     <dimen name="dim_body_text">16sp</dimen>
