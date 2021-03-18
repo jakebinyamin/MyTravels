@@ -17,7 +17,7 @@ public class BaseTable
         return m_Cur.getCount();
     }
 
-    public long DoQuery(String sQuery)
+    public synchronized long DoQuery(String sQuery)
     {
         DBManager DBM = DBManager.Get();
         if (DBM == null) {
@@ -25,15 +25,21 @@ public class BaseTable
             return -1;
         }
 
-        SQLiteDatabase DB = DBM.getWritableDatabase();
-        m_Cur = DB.rawQuery(sQuery, null);
-        int nResults = m_Cur.getCount();
-        Log.d(TAG, "QueryCount: " + nResults);
-        if (nResults  <= 0)
-        {
-            m_Cur.close();
-            DB.close();
-            return -1;
+        int nResults = -1;
+        try {
+            SQLiteDatabase DB = DBM.getWritableDatabase();
+            m_Cur = DB.rawQuery(sQuery, null);
+            nResults = m_Cur.getCount();
+            Log.d(TAG, "QueryCount: " + nResults);
+            if (nResults <= 0) {
+                m_Cur.close();
+ //               DB.close();
+                return -1;
+            }
+        }
+        catch (IllegalStateException e) {
+            nResults = -1;
+            Log.e(TAG,"IllegalStateException: " + e.getMessage());
         }
 
         return nResults;

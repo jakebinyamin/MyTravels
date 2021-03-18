@@ -35,6 +35,7 @@ public class DBManager  extends SQLiteOpenHelper
 
         m_Context = context;
         m_Singelton = this;
+        Log.d(TAG, "DBManageris created: " + m_Singelton);
     }
 
     static public DBManager Create(Context context)

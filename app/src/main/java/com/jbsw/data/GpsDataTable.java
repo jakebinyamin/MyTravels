@@ -53,6 +53,9 @@ public class GpsDataTable extends BaseTable
 
     public boolean AddGPSRecord(long Id, Location Loc)
     {
+        if (Loc == null)
+            return false;
+
         DBManager DBM = DBManager.Get();
         long retVal = -1;
 

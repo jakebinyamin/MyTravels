@@ -87,11 +87,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.jbsw.data.NotesTable$gpsCoordinateReceiver">
-            <intent-filter>
-                <action android:name="com.jbw.MyTravels.LocData" />
-            </intent-filter>
-        </receiver> <!-- android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"> -->
+<!--        <receiver android:name="com.jbsw.data.NotesTable$gpsCoordinateReceiver">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.jbw.MyTravels.LocData" />-->
+<!--            </intent-filter>-->
+<!--        </receiver> &lt;!&ndash; android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"> &ndash;&gt;-->
         <service
             android:name="com.jbsw.utils.GpsTracker"
             android:enabled="true"

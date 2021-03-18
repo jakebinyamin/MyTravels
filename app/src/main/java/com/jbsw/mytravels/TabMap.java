@@ -270,6 +270,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             AddTripRoute(m_MDR.Id, m_MDR.StartDate);
         }
     }
+
     private void AddTripRoute(long Id, String sFromDate)
     {
         GpsDataTable Tab = new GpsDataTable();
@@ -416,7 +417,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         LatLng Pt = null;
         while ((JDR = Tab.GetNextRecord()) != null)
         {
-//            if (JDR.nLatitude != -1 || JDR.nLongitude != -1)
+            if (JDR.nLatitude != -1 || JDR.nLongitude != -1)
             {
                 Pt = new LatLng(JDR.nLatitude, JDR.nLongitude);
                 final int IconList[] = Utils.GetMapList();
@@ -637,6 +638,10 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
             NotesTable.DataRecord DR = m_EventsAdapter.GetRecordAtPosition(position);
             if (DR == null)
                 return;
+
+            if (DR.nLongitude == -1 && DR.nLatitude == -1)
+                return;
+
             LatLng Pt = new LatLng(DR.nLatitude, DR.nLongitude);
             float zoomLevel = 19.0f;
             m_Map.animateCamera(CameraUpdateFactory.newLatLngZoom(Pt, zoomLevel));

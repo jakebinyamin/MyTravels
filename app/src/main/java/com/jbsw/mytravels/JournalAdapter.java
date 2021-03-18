@@ -65,9 +65,9 @@ public class JournalAdapter extends BaseAdapter
         @Override
         protected void onPostExecute(String str)
         {
+            m_bRefreshing = false;
             notifyDataSetChanged();
             m_TabJournal.UpdateViews();
-            m_bRefreshing = false;
         }
     }
 
@@ -83,6 +83,9 @@ public class JournalAdapter extends BaseAdapter
     @Override
     public int getCount()
     {
+        if (m_bRefreshing)
+            return 0;
+
         return m_NotesTable.GetRecordCount();
     }
 

@@ -30,7 +30,7 @@ public class Utils
 {
     static private final String TAG = "TAGUtils";
     static private Context m_Context;
-    static private NotesTable.gpsCoordinateReceiver receiver;
+//    static private NotesTable.gpsCoordinateReceiver receiver;
 
     static public void SetContext(Context context)
     {
@@ -42,17 +42,17 @@ public class Utils
         return m_Context;
     }
 
-    static public void RegisterGpsReceiver()
-    {
-        IntentFilter filter = new IntentFilter("com.jbw.MyTravels.LocData");
-        receiver = new NotesTable.gpsCoordinateReceiver();
-        m_Context.registerReceiver(receiver, filter);
-    }
-
-    static public void UnRegisterGpsReceiver()
-    {
-        m_Context.unregisterReceiver(receiver);
-    }
+//    static public void RegisterGpsReceiver()
+//    {
+//        IntentFilter filter = new IntentFilter("com.jbw.MyTravels.LocData");
+//        receiver = new NotesTable.gpsCoordinateReceiver();
+//        m_Context.registerReceiver(receiver, filter);
+//    }
+//
+//    static public void UnRegisterGpsReceiver()
+//    {
+//        m_Context.unregisterReceiver(receiver);
+//    }
 
     static public int[] GetIconList()
     {

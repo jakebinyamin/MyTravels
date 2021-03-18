@@ -158,16 +158,16 @@ public class NotesTable extends BaseTable
         return retVal;
     }
 
-    public static class gpsCoordinateReceiver extends BroadcastReceiver
-    {
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            m_Longitude = intent.getDoubleExtra("Longitude", -1);
-            m_latitude = intent.getDoubleExtra("Latitude", -1);
-            Log.d(TAG, "Broadcast receiver, Longitude: " + m_Longitude + " Latitude " + m_latitude);
-        }
-    }
+//    public static class gpsCoordinateReceiver extends BroadcastReceiver
+//    {
+//        @Override
+//        public void onReceive(Context context, Intent intent)
+//        {
+//            m_Longitude = intent.getDoubleExtra("Longitude", -1);
+//            m_latitude = intent.getDoubleExtra("Latitude", -1);
+//            Log.d(TAG, "Broadcast receiver, Longitude: " + m_Longitude + " Latitude " + m_latitude);
+//        }
+//    }
 
     public boolean UpdateRecord(DataRecord DR)
     {

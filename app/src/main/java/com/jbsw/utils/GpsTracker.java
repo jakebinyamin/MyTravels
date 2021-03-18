@@ -43,7 +43,7 @@ public class GpsTracker extends Service
     public static final String CHANNEL_ID = "GpsTrackerChannel";
     private LocationManager m_LocationManager = null;
 
-    private static final long MIN_TIME = 1000 * 60; // 1 minute
+    private static final long MIN_TIME = 1000 * 5; // 5 seconds
     private MyLocationListener m_GpsLocationListener;
     private NotificationCompat.Builder m_Notification;
     private NotificationManager m_NotificationManager = null;

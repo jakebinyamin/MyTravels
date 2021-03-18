@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent MyIntent = new Intent(this, GpsTracker.class);
         this.startService(MyIntent);
 
-        Utils.RegisterGpsReceiver();
+//        Utils.RegisterGpsReceiver();
     }
 
     @Override
@@ -143,10 +143,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume()
     {
+        Log.d(TAG,"In onResume");
         super.onResume();
 
         m_DBAdapter.Refresh();
+        Log.d(TAG,"In onResume - adapter refreshed");
         SetupUX();
+        Log.d(TAG,"In onResume - SetupUX complete");
     }
 
     public void SetupUX()
@@ -160,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy()
     {
         super.onDestroy();
-        Utils.UnRegisterGpsReceiver();
+//        Utils.UnRegisterGpsReceiver();
     }
 
     @Override

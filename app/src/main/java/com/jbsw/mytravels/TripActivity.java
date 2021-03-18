@@ -92,6 +92,7 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         Log.d(TAG, "onPause...");
         UpdateData();
+        Log.d(TAG, "onPause - Update Data complete...");
     }
 
     @SuppressLint("RestrictedApi")
@@ -102,6 +103,7 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
         {
             Log.d(TAG, "m_BtnBack Pressed...");
             finish();
+            Log.d(TAG, "TripActivity finish() called...");
         }
 
         if (v== m_BtnMenu)
@@ -226,10 +228,14 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
         GpsTracker tracker = GpsTracker.GetTracker();
         if (tracker == null)
             return;
+
         Location loc = tracker.GetLocation();
+        if (loc == null)
+            return;
+
+        Log.d(TAG,"Location received: " + loc);
         GpsDataTable TabGps = new GpsDataTable();
         TabGps.AddGPSRecord(m_DR.Id, loc);
-
     }
 
     private class TabSelectedListener implements OnTabSelectedListener

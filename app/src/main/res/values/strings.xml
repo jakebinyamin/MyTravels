@@ -13,7 +13,7 @@
     <string name="end_date">Completed:</string>
     <string name="create_journal_entry">Journal Entry</string>
     <string name="journal_title">Title</string>
-    <string name="journal_text">Desrcribe the event…</string>
+    <string name="journal_text">Add you Journal details…</string>
     <string name="trip_title_hint">Enter a name for this new Journey</string>
     <string name="trip_description_hint">Write a description about this Journey</string>
     <string name="trip_description">Description</string>
@@ -68,7 +68,7 @@
     <string name="about_this_app">About this app</string>
     <string name="version_s">Version %s</string>
     <string name="app_description">App Description</string>
-    <string name="app_description_details">This app is specifically designed to help you remember those magic moments in your life..\n\nWhether these occur when you are travelling on vacation, or just living your day to day life.\n\nMiTravels will help you keep a track of those events through journals, routes and photos.</string>
+    <string name="app_description_details">This app is specifically designed to help you remember those magic moments in your life.\n\nWhether these occur when you are travelling on vacation, or just living your day to day life.\n\nMiTravels will help you keep a track of those events through journals, routes and photos.</string>
     <string name="privacy">Privacy</string>
     <string name="privacy_statement">MiTravels is specifically designed to provide 100% privacy of all your content.\n\nYou will be the only person that can view your content.\n\nAll the data and journals that you enter are stored locally on your device and not uploaded anywher to the internet unless you specifically request this to happen through any share or backup feature (coming soon.)
 
