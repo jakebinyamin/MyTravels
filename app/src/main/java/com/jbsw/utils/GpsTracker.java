@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.jbsw.data.DBManager;
 import com.jbsw.data.GpsDataTable;
@@ -50,6 +49,8 @@ public class GpsTracker extends Service
     private long m_Distance;
     private boolean m_bIsMonitoring = false;
     static public GpsTracker m_This;
+    private String m_sCurrentTrip;
+    PendingIntent m_IntentStartApp, m_IntentLocationSettings;
 
     boolean m_isGPSEnabled = false;
 
@@ -114,15 +115,19 @@ public class GpsTracker extends Service
         super.onStartCommand(intent, flags, startId);
 
         createNotificationChannel();
+
+        //
+        // Setup Intents for settings and our app
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0, notificationIntent, 0);
+        m_IntentStartApp = PendingIntent.getActivity(this,0, notificationIntent, 0);
+        Intent LocSettingsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        m_IntentLocationSettings = PendingIntent.getActivity(this, 0, LocSettingsIntent, 0);
 
         m_Notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
-//                .setContentText(getResources().getString(R.string.notificationmessage))
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setNumber(0)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(m_IntentStartApp);
 
         //
         // If service is starting up without Main activity, then we need to create this here.
@@ -195,12 +200,13 @@ public class GpsTracker extends Service
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
 
+        m_sCurrentTrip = MasterRec.Name;
         Log.d(TAG, "Monitoring with Distance: " + m_Distance);
-        String sText = String.format(getResources().getString(R.string.notificationmessage), MasterRec.Name);
-        m_Notification.setContentText(sText);
 
         startForeground(1, m_Notification.build());
         m_bIsMonitoring = true;
+
+        SetupNotification();
     }
 
     private boolean IsGpsOn()
@@ -208,6 +214,28 @@ public class GpsTracker extends Service
         return m_LocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
+    private void SetupNotification()
+    {
+        String sText;
+        if (!IsGpsOn())
+        {
+            m_Notification.setContentIntent(m_IntentLocationSettings);
+            sText = String.format(getResources().getString(R.string.no_gps));
+        }
+        else
+        {
+            m_Notification.setContentIntent(m_IntentStartApp);
+            sText = String.format(getResources().getString(R.string.notificationmessage), m_sCurrentTrip);
+
+        }
+        m_Notification.setContentText(sText);
+        m_Notification.setNumber(0);
+
+        if (m_NotificationManager != null) {
+            m_NotificationManager.notify(1, m_Notification.build());
+        }
+
+    }
 
     @Override
     public void onDestroy()
@@ -374,12 +402,14 @@ public class GpsTracker extends Service
         public void onProviderDisabled(String provider)
         {
             Log.e(TAG, "onProviderDisabled: " + "-"+provider+"-"+LocationManager.GPS_PROVIDER+"-");
+            SetupNotification();
         }
 
         @Override
         public void onProviderEnabled(String provider)
         {
             Log.e(TAG, "onProviderEnabled: " + provider);
+            SetupNotification();
         }
 
         @Override

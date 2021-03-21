@@ -7,7 +7,7 @@ import android.os.Build;
 import android.util.Log;
 
 public class StartTrackingReceiver extends BroadcastReceiver {
-    private static final String TAG = "TAGStartTrackingReceiver";
+    private static final String TAG = "TAGSTrackingReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -21,6 +21,5 @@ public class StartTrackingReceiver extends BroadcastReceiver {
             Log.d(TAG, "Android version < 26");
             context.startService(MyIntent);
         }
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

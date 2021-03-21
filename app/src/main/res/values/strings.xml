@@ -87,9 +87,10 @@
     <string name="gps_descr">Set the accuracy of GPS measurement. This attribute determines how often to mark a gps entry. The lower the number, the higher the accuracy, but will use more battery power</string>
     <string name="sort_header">Sort Order for Lists</string>
     <string name="sort_Journeys">Sort Order for Journeys list</string>
-    <string name="sort_Journeys_descr">Choose the order that you would like to sort your journeys in th ehome screen</string>
+    <string name="sort_Journeys_descr">Choose the order that you would like to sort your journeys in the home screen</string>
     <string name="sort_Journal">Sort Order for Journal entries</string>
     <string name="sort_Journal_descr">Choose the order that you would like to sort your journal entries in th ehournal screen</string>
+    <string name="no_gps">Tap to turn Location on to monitor your Journey.</string>
 
     <!-- Preference Titles -->
     <string name="reply_title">Default reply action</string>
