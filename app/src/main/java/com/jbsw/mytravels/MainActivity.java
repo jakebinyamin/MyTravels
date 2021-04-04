@@ -23,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.jbsw.data.DBManager;
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DBManager m_DBM = null;
     private DrawerLayout m_Drawer;
     NavigationView m_NavigationView;
+    private AdView m_AddView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +94,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.startService(MyIntent);
 
 //        Utils.RegisterGpsReceiver();
+
+        //
+        // Setup Add views
+        MobileAds.initialize(this);
+        m_AddView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        m_AddView.loadAd(adRequest);
     }
 
     @Override
@@ -110,6 +123,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.menu_privacy:
                 LaunchPrivacyPolicy();
                 break;
+            case R.id.menu_rate:
+                RateUs();
+                break;
         }
 
         m_Drawer.closeDrawer(Gravity.LEFT);
@@ -119,6 +135,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void LaunchPrivacyPolicy()
     {
         Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://jbswdev.wixsite.com/mitravels/privacy-policy"));
+        startActivity(myIntent);
+    }
+
+    private void RateUs()
+    {
+        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.jbsw.mytravels"));
         startActivity(myIntent);
     }
 

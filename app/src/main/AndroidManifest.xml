@@ -79,6 +79,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBdOWxtTd-NYgFCwqPXpjoZhNL4VtFIyxw" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/banner_app_id"/>
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true"/>
+
         <receiver
             android:name="com.jbsw.utils.StartTrackingReceiver"
             android:enabled="true"

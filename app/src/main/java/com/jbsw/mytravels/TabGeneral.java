@@ -66,14 +66,15 @@ public class TabGeneral extends Fragment implements View.OnClickListener
         m_StatusIcon = (ImageView) m_ThisWIndow.findViewById(R.id.status_icon);
 
         m_Descr = view.findViewById(R.id.TabTripDescription);
-        if (m_Descr != null)
+        if (m_Descr != null && m_DR != null)
             m_Descr.setText(m_DR.Descr);
         m_Title = view.findViewById(R.id.TabTripTitle);
-        if (m_Title != null)
+        if (m_Title != null && m_DR != null)
             m_Title.setText(m_DR.Name);
 
         m_GpsCheckBox = (CheckBox) view.findViewById(R.id.GpsCheckBox);
-        m_GpsCheckBox.setChecked(m_DR.UseGps);
+        if (m_DR != null)
+            m_GpsCheckBox.setChecked(m_DR.UseGps);
 
         SetupViews();
     }

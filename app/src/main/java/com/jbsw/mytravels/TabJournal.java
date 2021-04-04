@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.jbsw.data.NotesTable;
 import com.jbsw.data.TravelMasterTable;
 
@@ -38,6 +41,7 @@ public class TabJournal extends Fragment implements View.OnClickListener
     private TravelMasterTable.DataRecord m_DR;
     private TripActivity m_Parent = null;
     private JournalAdapter m_JournalAdapter;
+    private AdView m_AddView;
 
     public TabJournal() {
         Log.d(TAG,"In Constructor");
@@ -68,6 +72,14 @@ public class TabJournal extends Fragment implements View.OnClickListener
         Img.setClipToOutline(true);
 
 //        UpdateViews();
+        //
+        // Setup Add views
+        MobileAds.initialize(getContext());
+        m_AddView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        m_AddView.loadAd(adRequest);
     }
 
     public void UpdateViews()

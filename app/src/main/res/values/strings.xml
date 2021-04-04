@@ -63,6 +63,7 @@
     <string name="show_journal_entry_on_map">Show this Journal entry on the Map</string>
     <string name="about">About</string>
     <string name="settings">Settings</string>
+    <string name="rate">Rate us</string>
     <string name="intro">View Introduction</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="about_this_app">About this app</string>
@@ -127,5 +128,15 @@
         <item>Excercise</item>
         <item>Hiking</item>
     </string-array>
+
+//
+// Banner stuff
+    <string name="banner_app_id">ca-app-pub-3709500405205625~3592890721</string>
+
+<!--    <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>-->
+<!--    <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>-->
+
+    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>
+    <string name="banner_id2">ca-app-pub-3709500405205625/6310020575</string>
 
 </resources>
