@@ -100,8 +100,17 @@ public class GpsDataTable extends BaseTable
 
     public DataRecord GetNextRecord()
     {
-        if (!m_Cur.moveToNext())
+        if (m_Cur == null)
             return null;
+
+        try {
+            if (!m_Cur.moveToNext())
+                return null;
+        }
+        catch (Exception e) {
+            Log.d(TAG, "Exception: " + e.getMessage());
+            return null;
+        }
 
         return GetData();
     }
