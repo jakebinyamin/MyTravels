@@ -71,6 +71,7 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Semaphore;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
@@ -134,14 +135,13 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
     private class InitialiseInThread extends AsyncTask<Object,Void,String>
     {
         private View m_View;
-        private ProgressDialog dialog;
 
         public InitialiseInThread(View view)
         {
             m_View = view;
-            dialog = new ProgressDialog(getActivity());
         }
 
+        @Override
         protected void onPreExecute()
         {
             InitialiseInUIThread(m_View);
@@ -150,9 +150,9 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         @Override
         protected String doInBackground(Object... objects)
         {
-            Log.d(TAG, "In thread Initialise");
-            Initialise(m_View);
-            Log.d(TAG, "Thread Complete Initialise");
+            Log.d(TAG, "In thread, Before LoadFilterData");
+            LoadFilterData();
+            Log.d(TAG, "Thread Complete, After LoadFilterData");
 
             return null;
         }
@@ -203,14 +203,6 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         Log.d(TAG, "InitialiseInUIThread Complete");
     }
 
-    private void Initialise(View view)
-    {
-
-        Log.d(TAG, "Before LoadFilterData");
-        LoadFilterData();
-        Log.d(TAG, "After LoadFilterData");
-    }
-
     @Override
     public void onResume() {
         Log.d(TAG, "onResume");
@@ -250,24 +242,34 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
 
     private void BuildMap()
     {
-        m_GreatestDistance = 0;
-
-        m_Map.clear();
-//        AddJournalMarkers(m_MDR.Id);
-//        AddTripRoute(m_MDR.Id, m_MDR.StartDate);
-
         BuildMapInBkg MapLoader = new BuildMapInBkg();
         Thread thread = new Thread(MapLoader);
         thread.start();
     }
 
+    private Semaphore m_BuildMapSem = new Semaphore(1);
 
     private class BuildMapInBkg implements Runnable
     {
         @Override
-        public void run() {
+        public void run()
+        {
+            if (!m_BuildMapSem.tryAcquire()) {
+                Log.d(TAG, "Failed Acquiring a semaphore!!!");
+                return;
+            }
+
+            Log.d(TAG, "In thread and successfully building Map");
+            m_GreatestDistance = 0;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    m_Map.clear();
+                }
+            });
             AddJournalMarkers(m_MDR.Id);
             AddTripRoute(m_MDR.Id, m_MDR.StartDate);
+            m_BuildMapSem.release();
         }
     }
 

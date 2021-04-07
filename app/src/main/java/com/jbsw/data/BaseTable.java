@@ -41,6 +41,10 @@ public class BaseTable
             nResults = -1;
             Log.e(TAG,"IllegalStateException: " + e.getMessage());
         }
+        catch (Exception e) {
+            Log.e(TAG,"DoQuery: Exeception.." + e.getMessage());
+            nResults = -1;
+        }
 
         return nResults;
     }

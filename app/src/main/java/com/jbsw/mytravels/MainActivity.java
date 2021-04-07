@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
-        m_Drawer.closeDrawer(Gravity.LEFT);
+        m_Drawer.closeDrawer(GravityCompat.START);
         return false;
     }
 
