@@ -224,18 +224,6 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
         m_DR = tGeneral.GetDataRecord();
         TravelMasterTable tab = new TravelMasterTable();
         tab.UpdateRecord(m_DR);
-
-        GpsTracker tracker = GpsTracker.GetTracker();
-        if (tracker == null)
-            return;
-
-        Location loc = tracker.GetLocation();
-        if (loc == null)
-            return;
-
-        Log.d(TAG,"Location received: " + loc);
-        GpsDataTable TabGps = new GpsDataTable();
-        TabGps.AddGPSRecord(m_DR.Id, loc);
     }
 
     private class TabSelectedListener implements OnTabSelectedListener

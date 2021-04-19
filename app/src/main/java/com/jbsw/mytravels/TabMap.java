@@ -309,7 +309,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
                     m_PtFurthestFromFirst = Pt;
                 }
             }
-            if (PtLast != null && results[0] > 50.0)
+            if (PtLast != null/* && results[0] > 50.0*/)
             {
                 long nDay = Utils.CalculateDays(sFromDate, DR.Date);
                 int color = ColorList[(int)nDay % nClrSize];
