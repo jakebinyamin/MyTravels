@@ -133,9 +133,11 @@
 // Banner stuff
     <string name="banner_app_id">ca-app-pub-3709500405205625~3592890721</string>
 
+<!--    TEST ACCOUNTS  -->
     <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>
 
+    <!--    LIVE ACCOUNTS  -->
 <!--    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>-->
 <!--    <string name="banner_id2">ca-app-pub-3709500405205625/6310020575</string>-->
 

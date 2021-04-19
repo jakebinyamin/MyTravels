@@ -1,5 +1,6 @@
 package com.jbsw.mytravels;
 
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.jbsw.data.GpsDataTable;
 import com.jbsw.data.TravelMasterTable;
 import com.jbsw.utils.GpsTracker;
 import com.jbsw.utils.Utils;
@@ -181,12 +183,31 @@ public class TabGeneral extends Fragment implements View.OnClickListener
         CheckForGPSMonitor();
     }
 
+    private void AddGpsRecord()
+    {
+        if (m_DR.Status != TravelMasterTable.StatusInProgress || !m_DR.UseGps)
+            return;
+
+        GpsTracker tracker = GpsTracker.GetTracker();
+        if (tracker == null)
+            return;
+
+        Location loc = tracker.GetLocation();
+        if (loc == null)
+            return;
+
+        Log.d(TAG,"Location received: " + loc + "For Record: " + m_DR.Id);
+        GpsDataTable TabGps = new GpsDataTable();
+        TabGps.AddGPSRecord(m_DR.Id, loc);
+    }
+
     private void CheckForGPSMonitor()
     {
         GpsTracker gps  = GpsTracker.GetTracker();
         if (gps == null)
             return;
 
+        AddGpsRecord();
         gps.CheckToStartGPSMonitor();
     }
 
