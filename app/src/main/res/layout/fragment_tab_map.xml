@@ -24,7 +24,7 @@
             android:clipToPadding="false"
             android:clipChildren="false"
             android:paddingHorizontal="30dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="5dp">
         </androidx.viewpager2.widget.ViewPager2>
 
         <LinearLayout
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginHorizontal="@dimen/dim_map_legend_margin"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/map_btns_bkg"
             android:orientation="vertical">
             <CheckBox
@@ -72,6 +72,17 @@
             </LinearLayout>
 
         </LinearLayout>
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background = "@color/grey_bkg"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_id4"
+            />
+
     </LinearLayout>
 </FrameLayout>
 

@@ -43,6 +43,9 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -96,6 +99,7 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
     private CheckBox m_CBShowJournals;
     private DaysListAdapter m_DaysListAdapter;
     private String m_sFilterDate = null;
+    private AdView m_AddView;
 
 
     TravelMasterTable.DataRecord m_MDR;
@@ -129,6 +133,14 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         InitAsync.execute();
 
 //        Initialise(view);
+
+        //
+        // Setup Add views
+        MobileAds.initialize(getContext());
+        m_AddView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        m_AddView.loadAd(adRequest);
+
         Log.d(TAG, "In onViewCreated Initialise complete");
     }
 

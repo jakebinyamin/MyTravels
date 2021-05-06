@@ -140,5 +140,15 @@
             android:layout_height="@dimen/dim_photolist_h" />
 
     </LinearLayout>
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background = "@color/grey_bkg"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_id3"
+        />
 
 </LinearLayout>

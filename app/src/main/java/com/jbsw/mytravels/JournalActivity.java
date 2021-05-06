@@ -30,6 +30,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.jbsw.data.DBManager;
 import com.jbsw.data.NotesTable;
 import com.jbsw.data.NotesTable.DataRecord;
@@ -76,6 +79,7 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
     private Spinner m_Spinner;
     private String m_sMainPhoto;
     private CheckBox m_ChkBoxShowOnMap;
+    private AdView m_AddView;
 
     private static final int PICK_IMAGE = 100;
 
@@ -98,6 +102,13 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
             LoadRecord();
         else
             m_DR = m_Table.GetNewDataRecord();
+
+        //
+        // Setup Add views
+        MobileAds.initialize(this);
+        m_AddView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        m_AddView.loadAd(adRequest);
 
         //
         // Setup buttons

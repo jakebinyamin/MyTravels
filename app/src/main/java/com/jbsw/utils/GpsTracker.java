@@ -312,14 +312,6 @@ public class GpsTracker extends Service
 
             m_LastLocation.set(location);
 
-            //
-            // Broadcast the data
-//            Intent intent = new Intent();
-//            intent.setAction("com.jbw.MyTravels.LocData");
-//            intent.putExtra("Longitude", m_LastLocation.getLongitude());
-//            intent.putExtra("Latitude", m_LastLocation.getLatitude());
-//            sendBroadcast(intent);
-//            Log.d(TAG, "Broadcasting location: " + location);
         }
 
         private boolean FilterLocation(Location location)

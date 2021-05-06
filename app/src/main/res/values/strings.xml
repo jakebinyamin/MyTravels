@@ -77,7 +77,9 @@
     <string name="ask_for_permission">MiTravels collects Your location data when you start a Journey, even when the App is closed or not in use.\n\nThis data is used so that you can follow your Journeys on our interactive Map.\n\nPlease select Allow on the following Permission dialogs to get the benefit from MiTravels.</string>
     <string name="ask_for_permission_title">Permissions</string>
     <string name="credits">Credits</string>
-    <string name="credt1">Adrianna Calvo Cover Photo in Splash Screen (pexels.com)\nJess Bailey Designs (pexels.com)\nhttps://www.pexels.com/@jessbaileydesign</string>
+    <string name="credt1">Adrianna Calvo Cover Photo in Splash Screen (pexels.com)\nJess Bailey Designs (pexels.com)\nhttps://www.pexels.com/@jessbaileydesign\n\nIcons:\nfreepik(www.freepik.com) from www.flaticon.com
+    \nsmalllikeart (https://www.flaticon.com/authors/smalllikeart)
+    </string>
     <string name="first_journey">Create your first Journey.\n\nDon\'t let those memories\nbe forgotten...</string>
     <string name="first_journal">Tap below to add your first journal entry...</string>
     <string name="tap_here_to_begin">Tap here to Begin...</string>
@@ -127,6 +129,8 @@
         <item>Sport</item>
         <item>Excercise</item>
         <item>Hiking</item>
+        <item>Social</item>
+        <item>Fun</item>
     </string-array>
 
 //
@@ -134,11 +138,15 @@
     <string name="banner_app_id">ca-app-pub-3709500405205625~3592890721</string>
 
 <!--    TEST ACCOUNTS  -->
-<!--    <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>-->
-<!--    <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>-->
+    <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id3">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id4">ca-app-pub-3940256099942544/6300978111</string>
 
     <!--    LIVE ACCOUNTS  -->
-    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>
-    <string name="banner_id2">ca-app-pub-3709500405205625/6310020575</string>
+<!--    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>-->
+<!--    <string name="banner_id2">ca-app-pub-3709500405205625/6310020575</string>-->
+    <!--    <string name="banner_id3">ca-app-pub-3709500405205625/8276640109</string>-->
+    <!--    <string name="banner_id4">ca-app-pub-3709500405205625/5996099305</string>-->
 
 </resources>
