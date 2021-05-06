@@ -99,9 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Setup Add views
         MobileAds.initialize(this);
         m_AddView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         m_AddView.loadAd(adRequest);
     }
 

@@ -76,9 +76,7 @@ public class TabJournal extends Fragment implements View.OnClickListener
         // Setup Add views
         MobileAds.initialize(getContext());
         m_AddView = view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         m_AddView.loadAd(adRequest);
     }
 
