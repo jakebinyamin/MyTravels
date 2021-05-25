@@ -79,7 +79,9 @@ public class NotesTable extends BaseTable
     public static final int    DataSport         = 10;
     public static final int    DataExcercise     = 11;
     public static final int    DataHike          = 12;
-    public static final int    MAX_TYPES         = 13;
+    public static final int    DataSocial        = 13;
+    public static final int    DataFun           = 14;
+    public static final int    MAX_TYPES         = 15;
 
     public class DataRecord
     {

@@ -25,6 +25,16 @@
             />
     </group>
     <group android:checkableBehavior="single" android:id="@+id/g3">
+        <item android:id="@+id/menu_backup"
+            android:title="@string/backup"
+            android:icon="@drawable/backup"
+            />
+        <item android:id="@+id/menu_restore"
+            android:title="@string/restore"
+            android:icon="@drawable/restore"
+            />
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/g4">
         <item android:id="@+id/menu_privacy"
             android:title="@string/privacy_policy"
             android:icon="@drawable/privacy"

@@ -142,6 +142,8 @@
     <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_id3">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_id4">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
 
     <!--    LIVE ACCOUNTS  -->
 <!--    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>-->

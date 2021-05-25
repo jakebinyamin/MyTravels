@@ -26,8 +26,23 @@ import android.widget.ListView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
+import com.jbsw.GoogleDrive.BackupData;
+import com.jbsw.GoogleDrive.DriveServiceHelper;
 import com.jbsw.data.DBManager;
 import com.jbsw.data.NotesTable;
 import com.jbsw.data.TravelMasterTable;
@@ -35,10 +50,9 @@ import com.jbsw.utils.GpsTracker;
 import com.jbsw.utils.Utils;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.List;
 
-// TODO Add background when no trips
-// TODO Delete Trip
-// TODO Menu and about
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener
 {
@@ -52,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout m_Drawer;
     NavigationView m_NavigationView;
     private AdView m_AddView;
+    private GoogleSignInAccount m_GoogleAccount;
+    private static final int REQUEST_CODE_SIGN_IN = 1;
+    private static final String WEB_CLIENT_ID = "821524552405-s5aukovdnvl7vpoh10eqs541tfms41u4.apps.googleusercontent.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +141,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.menu_rate:
                 RateUs();
                 break;
+
+            case R.id.menu_backup:
+                DoBackup();
+                break;
         }
 
         m_Drawer.closeDrawer(GravityCompat.START);
         return false;
     }
+
 
     private void LaunchPrivacyPolicy()
     {
@@ -205,4 +227,92 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
            LaunchSettings();
        }
     }
+
+    private void DoBackup()
+    {
+        m_GoogleAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if (m_GoogleAccount != null) {
+            Log.d(TAG, "Signing Previously Successful!! - Account:  " + m_GoogleAccount.getEmail());
+            StartBackup();
+            return;
+        }
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(WEB_CLIENT_ID)
+                .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                .build();
+
+        GoogleSignInClient client = GoogleSignIn.getClient(this, gso);
+
+        startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData)
+    {
+        switch (requestCode) {
+            case REQUEST_CODE_SIGN_IN:
+                Log.d(TAG, "in onActivityResult for REQUEST_CODE_SIGN_IN, ResultCode: " + resultCode + ", resultData: " + resultData );
+                if (/*resultCode == Activity.RESULT_OK && */resultData != null) {
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(resultData);
+                    try {
+                        m_GoogleAccount = task.getResult(ApiException.class);
+                        Log.d(TAG, "Signing Successful!! - Account: " + m_GoogleAccount.getEmail());
+                        StartBackup();
+
+                        // Signed in successfully, show authenticated UI.
+                    } catch (ApiException e) {
+                        // The ApiException status code indicates the detailed failure reason.
+                        // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                        Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
+                    }
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, resultData);
+    }
+
+    private void StartBackup()
+    {
+        BackupData BD = new BackupData(this, m_GoogleAccount);
+        Thread ThrdBkp = new Thread(BD);
+        ThrdBkp.start();
+
+        /*
+        GoogleAccountCredential credential =
+                GoogleAccountCredential.usingOAuth2(
+                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
+        credential.setSelectedAccount(m_GoogleAccount.getAccount());
+        Drive googleDriveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(),  new GsonFactory(), credential)
+                        .setApplicationName("Drive API Migration")
+                        .build();
+
+        // The DriveServiceHelper encapsulates all REST API and SAF functionality.
+        // Its instantiation is required before handling any onClick actions.
+        DriveServiceHelper dsv = new DriveServiceHelper(googleDriveService);
+        dsv.createFolder("MiTravels").addOnSuccessListener(sName -> {
+            Log.d(TAG, "Folder id: " + sName);
+        });
+
+        dsv.queryFiles()
+                .addOnSuccessListener(fileList -> {
+                    StringBuilder builder = new StringBuilder();
+                    List<File> fl = fileList.getFiles();
+                    Log.d(TAG, "File List size: " + fl.size());
+                    for (File file : fl) {
+                        Log.d(TAG, "Getting file: " + file.getName());
+                        builder.append(file.getName()).append("\n");
+                    }
+                    String fileNames = builder.toString();
+
+                    Log.d(TAG, "FileNames: " + fileNames);
+
+//                    setReadOnlyMode();
+                })
+                .addOnFailureListener(exception -> Log.e(TAG, "Unable to query files.", exception));
+         */
+    }
+
 }
