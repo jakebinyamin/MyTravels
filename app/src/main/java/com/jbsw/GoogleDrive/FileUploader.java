@@ -29,7 +29,7 @@ public class FileUploader implements MediaHttpUploaderProgressListener
         m_FileListToUpload.clear();
     }
 
-    public void SetFolerId(String sId)
+    public void SetFolderId(String sId)
     {
         m_sFolderId = sId;
     }

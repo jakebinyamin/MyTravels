@@ -138,6 +138,10 @@ public class TravelMasterTable extends BaseTable
     {
         return DoQuery(QUERY_TABLE_MASTER_INPROGRESS) > 0;
     }
+    public boolean QueryRaw()
+    {
+        return  DoQuery(QUERY_TABLE_MASTER_ALL) > 0;
+    }
 
     public boolean QueryAll()
     {
@@ -236,4 +240,5 @@ public class TravelMasterTable extends BaseTable
     {
         return DoDelete(DB, TABLE_MASTER, COLUMN_ID, Id);
     }
+
 }
