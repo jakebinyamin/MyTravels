@@ -8,25 +8,23 @@ import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class FileUploader implements MediaHttpUploaderProgressListener
 {
     private static final String TAG = "TAGBKPFileUploader";
     private DriveServiceHelper m_DSO;
-    private List<String> m_FileListToUpload;
+    private HashMap<String, String> m_UploadFileList;
+    private Iterator<Map.Entry<String, String>> m_FileListIterator;
     private String m_sFolderId;
     private int m_nCurrFile;
 
     public FileUploader(DriveServiceHelper dso)
     {
         m_DSO = dso;
-        m_FileListToUpload = new ArrayList<String>();
-    }
-
-    public void ClearList()
-    {
-        m_FileListToUpload.clear();
     }
 
     public void SetFolderId(String sId)
@@ -34,9 +32,17 @@ public class FileUploader implements MediaHttpUploaderProgressListener
         m_sFolderId = sId;
     }
 
-    public void AddFileToList(String sFile)
+    public void SetUploadFileList(HashMap<String, String>UploadFileList)
     {
-        m_FileListToUpload.add(sFile);
+        m_UploadFileList = UploadFileList;
+        for (String i : m_UploadFileList.keySet()) {
+            Log.e(TAG, "KEY: " + i);
+        }
+        for (String i : m_UploadFileList.values()) {
+            Log.e(TAG, "VALUE: " + i);
+        }
+
+        m_FileListIterator = m_UploadFileList.entrySet().iterator();
     }
 
     public void StartUpload()
@@ -48,18 +54,21 @@ public class FileUploader implements MediaHttpUploaderProgressListener
 
     void UploadNextFile()
     {
-        if (m_nCurrFile >= m_FileListToUpload.size()) {
+        if (!m_FileListIterator.hasNext()) {
             Log.d(TAG, "All files backed up.. " + m_nCurrFile);
             return;
         }
 
-        String sFile = m_FileListToUpload.get(m_nCurrFile);
-        m_nCurrFile++;
+        //
+        // Get source file and destination file
+        Map.Entry<String, String> entry = m_FileListIterator.next();
+        String sSourceFile = entry.getKey();
+        String sDestnFile = entry.getValue();
 
         //
         // Create the file
-        Log.d(TAG, "Backing up: " + sFile);
-        m_DSO.UploadFile(sFile, m_sFolderId, this);
+        Log.d(TAG, "Backing up Source: " + sSourceFile + " Destn: " + sDestnFile);
+        m_DSO.UploadFile(sSourceFile, sDestnFile, m_sFolderId, this);
     }
 
     @Override

@@ -55,8 +55,6 @@ public class BackupData implements Runnable
             return;
         }
 
-        String sJsonFile = Json.GetJsonFile();
-
         //
         // Create the backup folder
         if (!CreateBackupFolder()) {
@@ -68,26 +66,13 @@ public class BackupData implements Runnable
         Log.e(TAG, "Folder ID: " + m_sFolderId);
 
         m_FileUPloader.SetFolderId(m_sFolderId);
-        m_FileUPloader.ClearList();
-        m_FileUPloader.AddFileToList(sJsonFile);
+        m_FileUPloader.SetUploadFileList(Json.GetFilesToUpload());
 
         //
         // Gather files
 //        CollectPhotos();
         m_FileUPloader.StartUpload();
-        Log.d(TAG, "Exiting th Backup Thread..");
-
-    }
-
-    private void CollectPhotos()
-    {
-        PhotoLinkTable Photos = new PhotoLinkTable();
-        Photos.QueryForMaster(1);
-        PhotoLinkTable.DataRecord PhotoDr;
-        while ((PhotoDr = Photos.GetNextRecord()) != null) {
-            m_FileUPloader.AddFileToList(PhotoDr.sPath);
-            Log.d(TAG, "Adding file: " + PhotoDr.sPath);
-        }
+        Log.d(TAG, "Exiting the Backup Thread..");
 
     }
 

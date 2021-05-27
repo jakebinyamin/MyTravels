@@ -86,13 +86,13 @@ public class DriveServiceHelper {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
     }
 
-    public String UploadFile(String sFile, String sFolderId, MediaHttpUploaderProgressListener Listener)
+    public String UploadFile(String sSourceFile, String sDestnFile, String sFolderId, MediaHttpUploaderProgressListener Listener)
     {
         File fileMetadata = new File();
-        java.io.File SourceFile = new java.io.File(sFile);
-        fileMetadata.setName(SourceFile.getName());
+        java.io.File SourceFile = new java.io.File(sSourceFile);
+        fileMetadata.setName(sDestnFile);
         fileMetadata.setParents(Collections.singletonList(sFolderId));
-        String sMime = getMimeType(sFile);
+        String sMime = getMimeType(sSourceFile);
         Log.d(TAG, " SOurce File name: " + SourceFile.getName() + " MIME: " + sMime);
 //        fileMetadata.setMimeType(sMime);
 
@@ -109,7 +109,7 @@ public class DriveServiceHelper {
         }
         catch (Exception e)
         {
-            Log.e(TAG, "Cant Create Google Drive File for: " + sFile + " , Exception: " + e.getMessage());
+            Log.e(TAG, "Cant Create Google Drive File for: " + sSourceFile + "Destn file: " + sDestnFile + " Exception: " + e.getMessage());
         }
         return null;
     }
