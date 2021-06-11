@@ -73,7 +73,7 @@ public class TravelMasterTable extends BaseTable
     public static final String QUERY_TABLE_MASTER_INPROGRESS = "select * from " + TABLE_MASTER + " where " + COLUMN_STATUS + " = " + StatusInProgress + " and " + COLUMN_USEGPS + " = 1";
     public static final String QUERY_TABLE_MASTER_RECORD = QUERY_TABLE_MASTER_ALL + " where " + COLUMN_ID + " = ";
 
-    public class DataRecord
+    public static class DataRecord
     {
         public long Id;
         public String Name;

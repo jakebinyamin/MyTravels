@@ -37,9 +37,12 @@ import com.google.api.services.drive.model.FileList;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -214,7 +217,7 @@ public class DriveServiceHelper {
                         .execute();
                 for (File file : files.getFiles()) {
                     sId = file.getId();
-                    Log.d(TAG, "Folder found: " + file.getName());
+                    Log.d(TAG, "Folder found: " + file.getName() + " " + file.getId());
                 }
                 pageToken = files.getNextPageToken();
             } while (pageToken != null);
@@ -225,6 +228,53 @@ public class DriveServiceHelper {
         }
 
         return sId;
+    }
+
+    public boolean DownloadFile(String sDestnName, String sFileId)
+    {
+        boolean bRetVal = true;
+        try {
+            OutputStream outputstream = new FileOutputStream(sDestnName);
+            mDriveService.files().get(sFileId).executeMediaAndDownloadTo(outputstream);
+            outputstream.flush();
+            outputstream.close();
+            Log.d(TAG, "Output file written successfully: " + sDestnName);
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Cant write file: " + sDestnName + e.getMessage());
+            bRetVal = false;
+        }
+
+        return bRetVal;
+    }
+    public ArrayList<Pair<String,String>> FindFilesInFolder(String sFolderId)
+    {
+        String sQry = String.format("'%s' in parents", sFolderId);
+        Log.d(TAG, "Query: " + sQry);
+        ArrayList<Pair<String,String>> FilesToDownload = new ArrayList<Pair<String, String>>();
+
+        try {
+            String pageToken = null;
+            do {
+                FileList files = mDriveService.files().list()
+                        .setQ(sQry)
+                        .setSpaces("drive")
+                        .setFields("nextPageToken, files(id, name)")
+                        .setPageToken(pageToken)
+                        .execute();
+                for (File file : files.getFiles()) {
+                    Log.d(TAG, "File found: " + file.getName() + " " + file.getId());
+                    FilesToDownload.add(Pair.create(file.getName(), file.getId()));
+                }
+                pageToken = files.getNextPageToken();
+            } while (pageToken != null);
+        }
+        catch (Exception e)
+        {
+            Log.e(TAG, "Failed to find file: " + e.getMessage());
+        }
+
+        return FilesToDownload;
     }
 
     public boolean DeleteFie(String sFileId)

@@ -43,7 +43,7 @@ public class GpsDataTable extends BaseTable
     private static final String QUERY_TABLE_GPS = "select * from " + TABLE_GPS + " where " + COLUMN_ID + " = %d";
     private static final String WHERECLAUSE_FOR_DATE = " and " + COLUMN_DATE + " > \"%s\" and " + COLUMN_DATE + " < \"%s\"";
 
-    public class DataRecord
+    public static class DataRecord
     {
         public long Id;
         public String Date;
@@ -56,25 +56,42 @@ public class GpsDataTable extends BaseTable
         if (Loc == null)
             return false;
 
+        //
+        // Build the data
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String date = sdf.format(new Date());
+        double Long = Loc.getLongitude();
+        double Lat = Loc.getLatitude();
+
+        //
+        // Write the record
+        if (!AddGpsRecordRaw(Id, date, Long, Lat))
+            return false;
+
+        //
+        // Update prefs
+        DBManager DBM = DBManager.Get();
+        Prefs prefs = new Prefs(DBM.GetContext());
+        prefs.MarkJournalChange();
+
+        return true;
+    }
+
+    public boolean AddGpsRecordRaw(long Id, String sDate, double nLongitude, double nLatitude)
+    {
         DBManager DBM = DBManager.Get();
         long retVal = -1;
 
         try {
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String date = sdf.format(new Date());
-
             ContentValues values = new ContentValues();
             values.put(COLUMN_ID, Id);
-            values.put(COLUMN_DATE, date);
-            values.put(COLUMN_LONG, Loc.getLongitude());
-            values.put(COLUMN_LAT, Loc.getLatitude());
+            values.put(COLUMN_DATE, sDate);
+            values.put(COLUMN_LONG, nLongitude);
+            values.put(COLUMN_LAT, nLatitude);
 
             SQLiteDatabase DB = DBM.getWritableDatabase();
             retVal = DB.insert(TABLE_GPS, null, values);
             DB.close();
-            Prefs prefs = new Prefs(DBM.GetContext());
-            prefs.MarkJournalChange();
         } catch (SQLException e) {
             Log.d(TAG, "CreateRecord failed " + retVal);
             e.printStackTrace();

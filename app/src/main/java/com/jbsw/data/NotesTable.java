@@ -83,7 +83,7 @@ public class NotesTable extends BaseTable
     public static final int    DataFun           = 14;
     public static final int    MAX_TYPES         = 15;
 
-    public class DataRecord
+    public static class DataRecord
     {
         public long Id;
         public long MasterId;
@@ -108,7 +108,7 @@ public class NotesTable extends BaseTable
         return DR;
     }
 
-    public long CreateTextNote(DataRecord DR)
+    public long CreateTextNote(DataRecord DR, boolean bUseRawData)
     {
         DBManager DBM = DBManager.Get();
         long retVal = -1;
@@ -116,31 +116,29 @@ public class NotesTable extends BaseTable
 //        GpsTracker Tracker = new GpsTracker();
 //        Location Loc = Tracker.GetLocation();
 
-        GpsTracker gps = GpsTracker.GetTracker();
-        if (gps != null) {
-            Location loc = gps.GetLocation();
-            if (loc != null) {
-                m_Longitude = loc.getLongitude();
-                m_latitude = loc.getLatitude();
+        if (!bUseRawData) {
+            Log.d(TAG, "Dont use RawData");
+            GpsTracker gps = GpsTracker.GetTracker();
+            if (gps != null) {
+                Location loc = gps.GetLocation();
+                if (loc != null) {
+                    Log.d(TAG, "Getting GPS locn");
+                    m_Longitude = loc.getLongitude();
+                    m_latitude = loc.getLatitude();
+                }
             }
+            DR.nLongitude = m_Longitude;
+            DR.nLatitude = m_latitude;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            DR.Date = sdf.format(new Date());
         }
 
-//        if (DR.nLongitude == -1)
-            DR.nLongitude = m_Longitude;
-//        if (DR.nLatitude == -1)
-            DR.nLatitude = m_latitude;
-
-        if (m_Longitude == -1 && m_latitude == -1)
-            Log.e(TAG, "Longitude and Latitude not set!!");
-
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String date = sdf.format(new Date());
             byte[] StringBytes = DR.sStringNote.getBytes();
 
             ContentValues values = new ContentValues();
             values.put(COLUMN_MASTERID, DR.MasterId);
-            values.put(COLUMN_DATE, date);
+            values.put(COLUMN_DATE, DR.Date);
             values.put(COLUMN_TYPE, DR.nType);
             values.put(COLUMN_TITLE, DR.sTitle);
             values.put(COLUMN_DATA, StringBytes);

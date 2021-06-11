@@ -16,7 +16,7 @@ public class DBToJson
 
     private JSONObject m_JsonRoot;
     private JSONArray m_JsonMasterRecs;
-    Context m_Context;
+    private Context m_Context;
     String m_sOutFile;
     int m_nPhotoCnt;
 

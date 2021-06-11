@@ -43,6 +43,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.jbsw.GoogleDrive.BackupData;
 import com.jbsw.GoogleDrive.DriveServiceHelper;
+import com.jbsw.GoogleDrive.RestoreData;
 import com.jbsw.data.DBManager;
 import com.jbsw.data.NotesTable;
 import com.jbsw.data.TravelMasterTable;
@@ -67,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     NavigationView m_NavigationView;
     private AdView m_AddView;
     private GoogleSignInAccount m_GoogleAccount;
-    private static final int REQUEST_CODE_SIGN_IN = 1;
+    private static final int SIGN_IN_BACKUP = 1;
+    private static final int SIGN_IN_RESTORE = 2;
     private static final String WEB_CLIENT_ID = "821524552405-s5aukovdnvl7vpoh10eqs541tfms41u4.apps.googleusercontent.com";
 
     @Override
@@ -143,7 +145,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.menu_backup:
-                DoBackup();
+                SigninAndContinue(SIGN_IN_BACKUP);
+                break;
+
+            case R.id.menu_restore:
+                SigninAndContinue(SIGN_IN_RESTORE);
                 break;
         }
 
@@ -228,15 +234,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        }
     }
 
-    private void DoBackup()
+    private void SigninAndContinue(int Mode)
     {
         m_GoogleAccount = GoogleSignIn.getLastSignedInAccount(this);
         if (m_GoogleAccount != null) {
             Log.d(TAG, "Signing Previously Successful!! - Account:  " + m_GoogleAccount.getEmail());
-            StartBackup();
+            if (Mode == SIGN_IN_BACKUP)
+                StartBackup();
+            if (Mode == SIGN_IN_RESTORE)
+                StartRestore();
             return;
         }
 
+        Log.d(TAG, "Need to signin");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(WEB_CLIENT_ID)
@@ -245,26 +255,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         GoogleSignInClient client = GoogleSignIn.getClient(this, gso);
 
-        startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
+        startActivityForResult(client.getSignInIntent(), Mode);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData)
     {
         switch (requestCode) {
-            case REQUEST_CODE_SIGN_IN:
+            case SIGN_IN_BACKUP:
+            case SIGN_IN_RESTORE:
                 Log.d(TAG, "in onActivityResult for REQUEST_CODE_SIGN_IN, ResultCode: " + resultCode + ", resultData: " + resultData );
                 if (/*resultCode == Activity.RESULT_OK && */resultData != null) {
                     Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(resultData);
                     try {
                         m_GoogleAccount = task.getResult(ApiException.class);
                         Log.d(TAG, "Signing Successful!! - Account: " + m_GoogleAccount.getEmail());
-                        StartBackup();
-
-                        // Signed in successfully, show authenticated UI.
+                        if (requestCode == SIGN_IN_BACKUP)
+                            StartBackup();
+                        if (requestCode == SIGN_IN_RESTORE)
+                            StartRestore();
                     } catch (ApiException e) {
-                        // The ApiException status code indicates the detailed failure reason.
-                        // Please refer to the GoogleSignInStatusCodes class reference for more information.
                         Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
                     }
                 }
@@ -315,4 +325,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          */
     }
 
+    private void StartRestore()
+    {
+        RestoreData RD = new RestoreData(this, m_GoogleAccount);
+        Thread ThrdBkp = new Thread(RD);
+        ThrdBkp.start();
+
+    }
 }

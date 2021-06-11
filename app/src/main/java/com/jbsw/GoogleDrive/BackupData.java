@@ -14,34 +14,22 @@ import com.jbsw.data.PhotoLinkTable;
 
 import java.util.Collections;
 
-public class BackupData implements Runnable
+public class BackupData extends BackupRestoreBase implements Runnable
 {
     private static final String TAG = "TAGBKPBackupData";
-    private static final String m_sBackupFolder = "MiTravels";
+//    private static final String m_sBackupFolder = "MiTravels";
+//
+//    private GoogleSignInAccount m_Signin;
+//    private Context m_Context;
+//    private DriveServiceHelper m_DSO;
+//    private String m_sFolderId;
 
-    private GoogleSignInAccount m_Signin;
-    private Context m_Context;
-    private DriveServiceHelper m_DSO;
-    private String m_sFolderId;
     private FileUploader m_FileUPloader;
 
     public BackupData(Context context, GoogleSignInAccount Signin)
     {
-        m_Context = context;
-        m_Signin = Signin;
+        super(context, Signin);
         Initialise();
-    }
-
-    private void Initialise()
-    {
-        GoogleAccountCredential credential =
-                GoogleAccountCredential.usingOAuth2(
-                        m_Context, Collections.singleton(DriveScopes.DRIVE_FILE));
-        credential.setSelectedAccount(m_Signin.getAccount());
-        Drive googleDriveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(),  new GsonFactory(), credential)
-                .setApplicationName("MiTravels").build();
-
-        m_DSO = new DriveServiceHelper(googleDriveService);
         m_FileUPloader = new FileUploader(m_DSO);
     }
 

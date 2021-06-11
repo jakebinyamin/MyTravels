@@ -315,7 +315,7 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
         m_DR.MasterId = m_Id;
         GetDataFromUI();
 
-        long JournalId = m_Table.CreateTextNote(m_DR);
+        long JournalId = m_Table.CreateTextNote(m_DR, false);
 
         //
         // Add Photos
