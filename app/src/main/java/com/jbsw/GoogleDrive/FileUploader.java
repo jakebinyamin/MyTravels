@@ -21,6 +21,7 @@ public class FileUploader implements MediaHttpUploaderProgressListener
     private Iterator<Map.Entry<String, String>> m_FileListIterator;
     private String m_sFolderId;
     private int m_nCurrFile;
+    private BackupData.BackupCallBack m_Callback = null;
 
     public FileUploader(DriveServiceHelper dso)
     {
@@ -31,10 +32,18 @@ public class FileUploader implements MediaHttpUploaderProgressListener
     {
         m_sFolderId = sId;
     }
+    public void SetCallback(BackupData.BackupCallBack cb)
+    {
+        m_Callback = cb;
+    }
 
     public void SetUploadFileList(HashMap<String, String>UploadFileList)
     {
         m_UploadFileList = UploadFileList;
+
+        if (m_Callback != null)
+            m_Callback.setBackupCount(m_UploadFileList.size());
+
         for (String i : m_UploadFileList.keySet()) {
             Log.e(TAG, "KEY: " + i);
         }
@@ -43,6 +52,7 @@ public class FileUploader implements MediaHttpUploaderProgressListener
         }
 
         m_FileListIterator = m_UploadFileList.entrySet().iterator();
+
     }
 
     public void StartUpload()
@@ -58,6 +68,9 @@ public class FileUploader implements MediaHttpUploaderProgressListener
             Log.d(TAG, "All files backed up.. " + m_nCurrFile);
             return;
         }
+
+        if (m_Callback != null)
+            m_Callback.IncrementProgress();
 
         //
         // Get source file and destination file

@@ -3,14 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jbsw.mytravels">
 
-<!--    <supports-screens-->
-<!--        android:xlargeScreens="true"-->
-<!--        android:largeScreens="true"-->
-<!--        android:normalScreens="true"-->
-<!--        android:smallScreens="true"-->
-<!--        />-->
-
-    <!--    android:requestLegacyExternalStorage="true"-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,7 +12,11 @@
         android:screenOrientation="sensorPortrait"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".Intro"
+        <activity android:name=".BackupProgress"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/AppTheme.PopupDialog" />
+        <activity
+            android:name=".Intro"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
@@ -65,8 +61,8 @@
         <activity
             android:name=".TripActivity"
             android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".CreateProject"
             android:screenOrientation="sensorPortrait"
@@ -79,13 +75,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBdOWxtTd-NYgFCwqPXpjoZhNL4VtFIyxw" />
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/banner_app_id"/>
+            android:value="@string/banner_app_id" />
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true"/>
+            android:value="true" />
 
         <receiver
             android:name="com.jbsw.utils.StartTrackingReceiver"
@@ -94,17 +89,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver>
-<!--        <receiver android:name="com.jbsw.data.NotesTable$gpsCoordinateReceiver">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.jbw.MyTravels.LocData" />-->
-<!--            </intent-filter>-->
-<!--        </receiver> &lt;!&ndash; android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"> &ndash;&gt;-->
+        </receiver> <!-- <receiver android:name="com.jbsw.data.NotesTable$gpsCoordinateReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.jbw.MyTravels.LocData" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> &lt;!&ndash; android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"> &ndash;&gt; -->
         <service
             android:name="com.jbsw.utils.GpsTracker"
             android:enabled="true"
             android:exported="true" />
-        <!--            android:foregroundServiceType="location"-->
     </application>
 
     <uses-feature
@@ -112,13 +105,12 @@
         android:required="true" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

@@ -11,12 +11,14 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.jbsw.data.DBToJson;
 import com.jbsw.data.PhotoLinkTable;
+import com.jbsw.mytravels.R;
 
 import java.util.Collections;
 
 public class BackupData extends BackupRestoreBase implements Runnable
 {
     private static final String TAG = "TAGBKPBackupData";
+    private BackupCallBack m_CallBack;
 //    private static final String m_sBackupFolder = "MiTravels";
 //
 //    private GoogleSignInAccount m_Signin;
@@ -29,17 +31,24 @@ public class BackupData extends BackupRestoreBase implements Runnable
     public BackupData(Context context, GoogleSignInAccount Signin)
     {
         super(context, Signin);
-        Initialise();
+        m_CallBack = null;
         m_FileUPloader = new FileUploader(m_DSO);
+    }
+
+    public void SetCallBack(BackupCallBack cb)
+    {
+        m_CallBack = cb;
     }
 
     @Override
     public void run()
     {
+        Log.d(TAG, "In thread..");
         DBToJson Json = new DBToJson(m_Context);
+        SetString(R.string.bkp_prepare);
         if (!Json.Export()) {
             Log.e(TAG, "Failed to Create JSON");
-            //TODO add error message
+            Complete();
             return;
         }
 
@@ -47,21 +56,36 @@ public class BackupData extends BackupRestoreBase implements Runnable
         // Create the backup folder
         if (!CreateBackupFolder()) {
             Log.e(TAG, "Failed to Create Folder");
-            //TODO add error message
+            Complete();
             return;
         }
 
         Log.e(TAG, "Folder ID: " + m_sFolderId);
 
+        m_FileUPloader.SetCallback(m_CallBack);
         m_FileUPloader.SetFolderId(m_sFolderId);
         m_FileUPloader.SetUploadFileList(Json.GetFilesToUpload());
 
         //
         // Gather files
-//        CollectPhotos();
+        SetString(R.string.bkp_upload);
         m_FileUPloader.StartUpload();
-        Log.d(TAG, "Exiting the Backup Thread..");
+        Complete();
+    }
 
+    private void Complete()
+    {
+        Log.d(TAG, "Exiting the Backup Thread..");
+        if (m_CallBack != null)
+            m_CallBack.Complete();
+    }
+
+    private void SetString(int nMsg)
+    {
+        if (m_CallBack == null)
+            return;
+
+        m_CallBack.SetMessage(nMsg);
     }
 
     private boolean CreateBackupFolder()
@@ -78,5 +102,13 @@ public class BackupData extends BackupRestoreBase implements Runnable
         // Recreate the folder
         m_sFolderId = m_DSO.AsyncCreateFolder(m_sBackupFolder);
         return (m_sFolderId != "");
+    }
+
+    public interface BackupCallBack
+    {
+        public void SetMessage(int id);
+        public void setBackupCount(int nCnt);
+        public void IncrementProgress();
+        public void Complete();
     }
 }

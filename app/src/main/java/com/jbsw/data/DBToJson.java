@@ -88,7 +88,7 @@ public class DBToJson
             m_JsonRoot.put("Master", m_JsonMasterRecs);
             file.write(m_JsonRoot.toString(1));
             file.flush();
-            Log.d(TAG, "JSON Created: " + m_sOutFile + "\n\n\n"  + m_JsonRoot.toString(1));
+            Log.d(TAG, "JSON Created! " + m_sOutFile);
             java.io.File OutFile = new java.io.File(m_sOutFile);
             m_UploadFileList.put(m_sOutFile, OutFile.getName());
 

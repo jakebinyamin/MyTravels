@@ -95,6 +95,9 @@
     <string name="sort_Journal_descr">Choose the order that you would like to sort your journal entries in th ehournal screen</string>
     <string name="no_gps">Tap to turn Location on to monitor your Journey.</string>
 
+    <string name="bkp_prepare">Preparing Backup...</string>
+    <string name="bkp_upload">Uploading files...</string>
+
     <!-- Preference Titles -->
     <string name="reply_title">Default reply action</string>
     <string name="back">Back</string>
@@ -103,6 +106,19 @@
     <string name="loading_map">Loading Map...</string>
 
 
+    <string name="banner_app_id">ca-app-pub-3709500405205625~3592890721</string>
+    <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>
+
+    //
+    // Banner stuff
+    <string name="banner_id3">ca-app-pub-3940256099942544/6300978111</string>
+
+    <!--    TEST ACCOUNTS  -->
+    <string name="banner_id4">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="backup_progress">Backup Progress</string>
     <string-array name="trip_status_array">
         <item>Not Started</item>
         <item>In Progress</item>
@@ -133,21 +149,9 @@
         <item>Fun</item>
     </string-array>
 
-//
-// Banner stuff
-    <string name="banner_app_id">ca-app-pub-3709500405205625~3592890721</string>
-
-<!--    TEST ACCOUNTS  -->
-    <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id3">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id4">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="backup">Backup</string>
-    <string name="restore">Restore</string>
-
     <!--    LIVE ACCOUNTS  -->
-<!--    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>-->
-<!--    <string name="banner_id2">ca-app-pub-3709500405205625/6310020575</string>-->
+    <!--    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>-->
+    <!--    <string name="banner_id2">ca-app-pub-3709500405205625/6310020575</string>-->
     <!--    <string name="banner_id3">ca-app-pub-3709500405205625/8276640109</string>-->
     <!--    <string name="banner_id4">ca-app-pub-3709500405205625/5996099305</string>-->
 

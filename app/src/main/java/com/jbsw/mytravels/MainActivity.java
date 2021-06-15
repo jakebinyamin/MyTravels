@@ -145,7 +145,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.menu_backup:
-                SigninAndContinue(SIGN_IN_BACKUP);
+                Intent intentBackup = new Intent(this, BackupProgress.class);
+                startActivity(intentBackup);
+//                SigninAndContinue(SIGN_IN_BACKUP);
                 break;
 
             case R.id.menu_restore:
@@ -286,43 +288,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void StartBackup()
     {
+        Intent intentBackup = new Intent(this, BackupProgress.class);
+        startActivity(intentBackup);
+
         BackupData BD = new BackupData(this, m_GoogleAccount);
         Thread ThrdBkp = new Thread(BD);
         ThrdBkp.start();
-
-        /*
-        GoogleAccountCredential credential =
-                GoogleAccountCredential.usingOAuth2(
-                        this, Collections.singleton(DriveScopes.DRIVE_FILE));
-        credential.setSelectedAccount(m_GoogleAccount.getAccount());
-        Drive googleDriveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(),  new GsonFactory(), credential)
-                        .setApplicationName("Drive API Migration")
-                        .build();
-
-        // The DriveServiceHelper encapsulates all REST API and SAF functionality.
-        // Its instantiation is required before handling any onClick actions.
-        DriveServiceHelper dsv = new DriveServiceHelper(googleDriveService);
-        dsv.createFolder("MiTravels").addOnSuccessListener(sName -> {
-            Log.d(TAG, "Folder id: " + sName);
-        });
-
-        dsv.queryFiles()
-                .addOnSuccessListener(fileList -> {
-                    StringBuilder builder = new StringBuilder();
-                    List<File> fl = fileList.getFiles();
-                    Log.d(TAG, "File List size: " + fl.size());
-                    for (File file : fl) {
-                        Log.d(TAG, "Getting file: " + file.getName());
-                        builder.append(file.getName()).append("\n");
-                    }
-                    String fileNames = builder.toString();
-
-                    Log.d(TAG, "FileNames: " + fileNames);
-
-//                    setReadOnlyMode();
-                })
-                .addOnFailureListener(exception -> Log.e(TAG, "Unable to query files.", exception));
-         */
     }
 
     private void StartRestore()
