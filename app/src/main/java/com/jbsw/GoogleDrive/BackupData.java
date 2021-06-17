@@ -18,14 +18,6 @@ import java.util.Collections;
 public class BackupData extends BackupRestoreBase implements Runnable
 {
     private static final String TAG = "TAGBKPBackupData";
-    private BackupCallBack m_CallBack;
-//    private static final String m_sBackupFolder = "MiTravels";
-//
-//    private GoogleSignInAccount m_Signin;
-//    private Context m_Context;
-//    private DriveServiceHelper m_DSO;
-//    private String m_sFolderId;
-
     private FileUploader m_FileUPloader;
 
     public BackupData(Context context, GoogleSignInAccount Signin)
@@ -33,11 +25,6 @@ public class BackupData extends BackupRestoreBase implements Runnable
         super(context, Signin);
         m_CallBack = null;
         m_FileUPloader = new FileUploader(m_DSO);
-    }
-
-    public void SetCallBack(BackupCallBack cb)
-    {
-        m_CallBack = cb;
     }
 
     @Override
@@ -73,20 +60,6 @@ public class BackupData extends BackupRestoreBase implements Runnable
         Complete();
     }
 
-    private void Complete()
-    {
-        Log.d(TAG, "Exiting the Backup Thread..");
-        if (m_CallBack != null)
-            m_CallBack.Complete();
-    }
-
-    private void SetString(int nMsg)
-    {
-        if (m_CallBack == null)
-            return;
-
-        m_CallBack.SetMessage(nMsg);
-    }
 
     private boolean CreateBackupFolder()
     {
@@ -102,13 +75,5 @@ public class BackupData extends BackupRestoreBase implements Runnable
         // Recreate the folder
         m_sFolderId = m_DSO.AsyncCreateFolder(m_sBackupFolder);
         return (m_sFolderId != "");
-    }
-
-    public interface BackupCallBack
-    {
-        public void SetMessage(int id);
-        public void setBackupCount(int nCnt);
-        public void IncrementProgress();
-        public void Complete();
     }
 }

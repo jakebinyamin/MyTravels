@@ -21,7 +21,7 @@ public class FileUploader implements MediaHttpUploaderProgressListener
     private Iterator<Map.Entry<String, String>> m_FileListIterator;
     private String m_sFolderId;
     private int m_nCurrFile;
-    private BackupData.BackupCallBack m_Callback = null;
+    private BackupCallBack m_Callback = null;
 
     public FileUploader(DriveServiceHelper dso)
     {
@@ -32,7 +32,7 @@ public class FileUploader implements MediaHttpUploaderProgressListener
     {
         m_sFolderId = sId;
     }
-    public void SetCallback(BackupData.BackupCallBack cb)
+    public void SetCallback(BackupCallBack cb)
     {
         m_Callback = cb;
     }
@@ -81,7 +81,10 @@ public class FileUploader implements MediaHttpUploaderProgressListener
         //
         // Create the file
         Log.d(TAG, "Backing up Source: " + sSourceFile + " Destn: " + sDestnFile);
-        m_DSO.UploadFile(sSourceFile, sDestnFile, m_sFolderId, this);
+        if (!m_DSO.UploadFile(sSourceFile, sDestnFile, m_sFolderId, this)) {
+            Log.e(TAG, "Backup file failed..");
+            UploadNextFile();
+        }
     }
 
     @Override
@@ -92,6 +95,10 @@ public class FileUploader implements MediaHttpUploaderProgressListener
 
         if (uploader.getUploadState() == MediaHttpUploader.UploadState.MEDIA_COMPLETE) {
             Log.d(TAG, "Backup file complete");
+            UploadNextFile();
+        }
+        if (uploader.getUploadState() == MediaHttpUploader.UploadState.NOT_STARTED) {
+            Log.e(TAG, "Backup file not started..");
             UploadNextFile();
         }
     }

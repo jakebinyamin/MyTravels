@@ -89,7 +89,7 @@ public class DriveServiceHelper {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
     }
 
-    public String UploadFile(String sSourceFile, String sDestnFile, String sFolderId, MediaHttpUploaderProgressListener Listener)
+    public boolean UploadFile(String sSourceFile, String sDestnFile, String sFolderId, MediaHttpUploaderProgressListener Listener)
     {
         File fileMetadata = new File();
         java.io.File SourceFile = new java.io.File(sSourceFile);
@@ -113,8 +113,9 @@ public class DriveServiceHelper {
         catch (Exception e)
         {
             Log.e(TAG, "Cant Create Google Drive File for: " + sSourceFile + "Destn file: " + sDestnFile + " Exception: " + e.getMessage());
+            return false;
         }
-        return null;
+        return true;
     }
 
     public Task<String> createFolder(String sName)

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,28 +8,45 @@
     android:orientation="vertical"
     tools:context=".BackupProgress">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        style="@style/FilterTextTitle"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/backup_progress" />
-
+    <LinearLayout
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="35dp"
+        android:background="@drawable/title_background">
+            <TextView
+                android:id="@+id/id_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                style="@style/FilterTextTitle"
+                android:text="@string/backup_progress" />
+    </LinearLayout>>
     <TextView
         android:id="@+id/id_backup_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        style="@style/FilterTextTitle"
+        style="@style/body_text"
         android:layout_gravity="center_horizontal" />
 
     <ProgressBar
         android:id="@+id/id_progressBar"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/id_close"
+        android:background="@drawable/button_top_style"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:text="@string/close"
+        />
 
 </LinearLayout>

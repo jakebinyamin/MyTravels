@@ -31,6 +31,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ok">Ok</string>
+    <string name="close">Close</string>
     <string name="error_no_title">You must provide a Title for this new Journey</string>
     <string name="ru_sure_delete_trip">Are you sure you want to delete this Journey?</string>
     <string name="ru_sure_delete_journal">Are you sure you want to delete this Journal entry?</string>
@@ -95,8 +96,17 @@
     <string name="sort_Journal_descr">Choose the order that you would like to sort your journal entries in th ehournal screen</string>
     <string name="no_gps">Tap to turn Location on to monitor your Journey.</string>
 
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="backup_progress">Backing up your Journeys</string>
+    <string name="restore_progress">Restoring your Journeys</string>
     <string name="bkp_prepare">Preparing Backup...</string>
+    <string name="restore_prepare">Preparing for Restore...</string>
     <string name="bkp_upload">Uploading files...</string>
+    <string name="restore_download">Restoring files...</string>
+    <string name="restore_import">Importing data...</string>
+    <string name="bkp_complete">Backup Complete!</string>
+    <string name="restore_complete">Restore Complete!</string>
 
     <!-- Preference Titles -->
     <string name="reply_title">Default reply action</string>
@@ -116,9 +126,7 @@
 
     <!--    TEST ACCOUNTS  -->
     <string name="banner_id4">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="backup">Backup</string>
-    <string name="restore">Restore</string>
-    <string name="backup_progress">Backup Progress</string>
+    <string name="title_activity_restore_progress">RestoreProgress</string>
     <string-array name="trip_status_array">
         <item>Not Started</item>
         <item>In Progress</item>

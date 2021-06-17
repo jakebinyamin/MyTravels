@@ -151,7 +151,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.menu_restore:
-                SigninAndContinue(SIGN_IN_RESTORE);
+                Intent intentRestore = new Intent(this, RestoreProgress.class);
+                startActivity(intentRestore);
                 break;
         }
 
@@ -234,73 +235,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        {
            LaunchSettings();
        }
-    }
-
-    private void SigninAndContinue(int Mode)
-    {
-        m_GoogleAccount = GoogleSignIn.getLastSignedInAccount(this);
-        if (m_GoogleAccount != null) {
-            Log.d(TAG, "Signing Previously Successful!! - Account:  " + m_GoogleAccount.getEmail());
-            if (Mode == SIGN_IN_BACKUP)
-                StartBackup();
-            if (Mode == SIGN_IN_RESTORE)
-                StartRestore();
-            return;
-        }
-
-        Log.d(TAG, "Need to signin");
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(WEB_CLIENT_ID)
-                .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                .build();
-
-        GoogleSignInClient client = GoogleSignIn.getClient(this, gso);
-
-        startActivityForResult(client.getSignInIntent(), Mode);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData)
-    {
-        switch (requestCode) {
-            case SIGN_IN_BACKUP:
-            case SIGN_IN_RESTORE:
-                Log.d(TAG, "in onActivityResult for REQUEST_CODE_SIGN_IN, ResultCode: " + resultCode + ", resultData: " + resultData );
-                if (/*resultCode == Activity.RESULT_OK && */resultData != null) {
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(resultData);
-                    try {
-                        m_GoogleAccount = task.getResult(ApiException.class);
-                        Log.d(TAG, "Signing Successful!! - Account: " + m_GoogleAccount.getEmail());
-                        if (requestCode == SIGN_IN_BACKUP)
-                            StartBackup();
-                        if (requestCode == SIGN_IN_RESTORE)
-                            StartRestore();
-                    } catch (ApiException e) {
-                        Log.e(TAG, "signInResult:failed code=" + e.getStatusCode());
-                    }
-                }
-                break;
-        }
-
-        super.onActivityResult(requestCode, resultCode, resultData);
-    }
-
-    private void StartBackup()
-    {
-        Intent intentBackup = new Intent(this, BackupProgress.class);
-        startActivity(intentBackup);
-
-        BackupData BD = new BackupData(this, m_GoogleAccount);
-        Thread ThrdBkp = new Thread(BD);
-        ThrdBkp.start();
-    }
-
-    private void StartRestore()
-    {
-        RestoreData RD = new RestoreData(this, m_GoogleAccount);
-        Thread ThrdBkp = new Thread(RD);
-        ThrdBkp.start();
-
     }
 }

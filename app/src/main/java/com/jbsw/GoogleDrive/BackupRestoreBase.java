@@ -17,6 +17,8 @@ public class BackupRestoreBase
     private static final String TAG = "TAGBKPBackupData";
     protected static final String m_sBackupFolder = "MiTravels";
 
+    protected BackupCallBack m_CallBack;
+
     protected GoogleSignInAccount m_Signin;
     protected Context m_Context;
     protected DriveServiceHelper m_DSO;
@@ -29,6 +31,26 @@ public class BackupRestoreBase
         m_Signin = Signin;
         Initialise();
         Log.d(TAG, "in BackupRestoreBase constructor - after Initialise()");
+    }
+
+    public void SetCallBack(BackupCallBack cb)
+    {
+        m_CallBack = cb;
+    }
+
+    protected void Complete()
+    {
+        Log.d(TAG, "Exiting the Backup Thread..");
+        if (m_CallBack != null)
+            m_CallBack.Complete();
+    }
+
+    protected void SetString(int nMsg)
+    {
+        if (m_CallBack == null)
+            return;
+
+        m_CallBack.SetMessage(nMsg);
     }
 
     protected void Initialise()
