@@ -162,7 +162,8 @@ public class JournalActivity extends JournalActivityBase implements View.OnClick
         if (v == m_BtnAddPhoto) {
             try {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PICK_IMAGE);
+//                || (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE/*,Manifest.permission.WRITE_EXTERNAL_STORAGE*/}, PICK_IMAGE);
                 } else {
                     PickPhotos();
                 }

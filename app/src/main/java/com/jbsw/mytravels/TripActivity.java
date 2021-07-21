@@ -81,7 +81,7 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
 
         m_PageAdapter = new TripPageAdapter(getSupportFragmentManager(), m_Tabs.getTabCount());
         m_ViewPager.setAdapter(m_PageAdapter);
-        m_ViewPager.setOffscreenPageLimit(3);
+        m_ViewPager.setOffscreenPageLimit(4);
         m_Tabs.addOnTabSelectedListener(new TabSelectedListener());
         m_ViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(m_Tabs));
     }

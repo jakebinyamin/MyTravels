@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.jbsw.utils.PhotoBackgroundLoader;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ public class PhotoListViewAdapter extends RecyclerView.Adapter<PhotoListViewAdap
     private ArrayList<String> m_PhotoList = null;
     private PhotoItemClickListener m_ClickListener = null;
     private PhotoBackgroundLoader m_BkgLoader;
+    private Semaphore m_Semaphore = null;
 
     public PhotoListViewAdapter(ArrayList<String> List)
     {
@@ -33,6 +35,11 @@ public class PhotoListViewAdapter extends RecyclerView.Adapter<PhotoListViewAdap
     public void UpdateList(ArrayList<String> List)
     {
         m_PhotoList = List;
+    }
+
+    public void SetSemaphore(Semaphore Sem)
+    {
+        m_Semaphore = Sem;
     }
 
     @NonNull
@@ -80,6 +87,8 @@ public class PhotoListViewAdapter extends RecyclerView.Adapter<PhotoListViewAdap
     @Override
     public int getItemCount()
     {
+        if (m_Semaphore != null && m_Semaphore.availablePermits() <= 0)
+            return 0;
         return m_PhotoList.size();
     }
 
@@ -103,8 +112,10 @@ public class PhotoListViewAdapter extends RecyclerView.Adapter<PhotoListViewAdap
         @Override
         public void onClick(View v)
         {
-            if (m_ClickListener != null)
-                m_ClickListener.onPhotoItemClick(v, getAdapterPosition());
+            if (m_ClickListener != null) {
+                if (m_Semaphore == null || m_Semaphore.availablePermits() > 0)
+                    m_ClickListener.onPhotoItemClick(v, getAdapterPosition());
+            }
         }
     }
 }

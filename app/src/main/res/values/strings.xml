@@ -4,6 +4,7 @@
     <string name="new_adventure">Create a new Journey</string>
     <string name="home">Home</string>
     <string name="journal">Journal</string>
+    <string name="places">Places</string>
     <string name="map">Map</string>
     <string name="general">General</string>
     <string name="start_date">Started:</string>
@@ -115,18 +116,14 @@
     <string name="lets_start">Lets Start</string>
     <string name="loading_map">Loading Map...</string>
 
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
+    <string name="driving">Driving</string>
+    <string name="walking">Walking</string>
+    <string name="flight">Flight</string>
 
-    <string name="banner_app_id">ca-app-pub-3709500405205625~3592890721</string>
-    <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>
-
-    //
-    // Banner stuff
-    <string name="banner_id3">ca-app-pub-3940256099942544/6300978111</string>
-
-    <!--    TEST ACCOUNTS  -->
-    <string name="banner_id4">ca-app-pub-3940256099942544/6300978111</string>
     <string name="title_activity_restore_progress">RestoreProgress</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string-array name="trip_status_array">
         <item>Not Started</item>
         <item>In Progress</item>
@@ -139,6 +136,7 @@
         <item>Paused</item>
         <item>If you would like to continue recording this Journey tap the Continue button above.</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
     <string-array name="event_types_array">
         <item>Thoughts</item>
         <item>Flight</item>
@@ -157,6 +155,14 @@
         <item>Fun</item>
     </string-array>
 
+    //
+    // Banner stuff
+    <string name="banner_app_id">ca-app-pub-3709500405205625~3592890721</string>
+    <!--    TEST ACCOUNTS  -->
+    <string name="banner_id1">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id2">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id3">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id4">ca-app-pub-3940256099942544/6300978111</string>
     <!--    LIVE ACCOUNTS  -->
     <!--    <string name="banner_id1">ca-app-pub-3709500405205625/8706434841</string>-->
     <!--    <string name="banner_id2">ca-app-pub-3709500405205625/6310020575</string>-->

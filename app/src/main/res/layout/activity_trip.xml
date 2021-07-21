@@ -48,14 +48,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topbar"
-        android:textAllCaps="false"
         android:background="@drawable/title_background"
+        android:textAllCaps="false"
         android:textStyle="normal"
-        app:tabTextAppearance="@style/TabText"
         app:tabIconTint="@drawable/tab_colors"
         app:tabIndicatorColor="@color/colorHiLite"
-        app:tabInlineLabel="true"
+        app:tabInlineLabel="false"
         app:tabSelectedTextColor="@color/colorHiLite"
+        app:tabTextAppearance="@style/TabText"
         app:tabTextColor="@color/colorDarkGrey">
 
         <com.google.android.material.tabs.TabItem
@@ -71,6 +71,13 @@
             android:layout_height="wrap_content"
             android:icon="@drawable/book"
             android:text="@string/journal" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_places"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/places"
+            android:text="@string/places" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_map"
