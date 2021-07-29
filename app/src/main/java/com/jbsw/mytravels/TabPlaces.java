@@ -210,7 +210,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                         //
                         // check for changing between stationary and moving
                         if ((nDist > 300 && nSpeed > 5) || (TimeDiff == 0 && nDist > 50)) {
-                            String sTime = (nSpeed < 17 && TimeDiff > 15) ? dCurr : dPrev; // account for low gps readings when in the same place..
+                            String sTime = (nSpeed < 17 && TimeDiff > 14) ? dCurr : dPrev; // account for low gps readings when in the same place..
                             AddNewPlace(posPrint, dStart, sTime);
                             dStart = sTime;
                             posStart = posPrev;
@@ -228,15 +228,16 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                     else {
                         //
                         // Check if we need to change
+                        fDistTravelled += nDist;
                         if (TimeDiff > 10  || nSpeed < 12) {
                             posPrint = posCur;
+                            if (dStart.compareTo(dPrev) == 0)
+                                dPrev = dCurr;
                             AddMoving(dStart, dPrev, posStart, posPrev, fDistTravelled);
                             m_Pos = PlaceStatus.PLACE_STATIONARY;
                             dStart = dPrev;
                             nCountEntries = 0;
                         }
-                        else
-                            fDistTravelled += nDist;
 
                     }
                 } catch (Exception e) {
@@ -249,6 +250,13 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             // If in the same spot, then doc it
             if (m_Pos == PlaceStatus.PLACE_STATIONARY)
                 AddNewPlace(posPrint, dStart, dPrev);
+
+            if (m_Pos == PlaceStatus.PLACE_MOVING) {
+                if (dStart.compareTo(dPrev) == 0)
+                    dPrev = dCurr;
+
+                AddMoving(dStart, dPrev, posStart, posPrev, fDistTravelled);
+            }
 
             GetPhotosForDate();
             Log.d(TAG, "Ending thread");
@@ -329,7 +337,8 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                 sMovingType = GetString(R.string.walking);
                 type = MovingType.MOV_WALK;
             }
-            if (fDist / TimeDiff > 10000) {
+            if (TimeDiff > 0 && fDist / TimeDiff > 5000) {
+                Log.d(TAG, "Flight: TimeDiff: " + TimeDiff + ", Distance: " + fDist);
                 sMovingType = GetString(R.string.flight);
                 type = MovingType.MOV_FLIGHT;
             }
