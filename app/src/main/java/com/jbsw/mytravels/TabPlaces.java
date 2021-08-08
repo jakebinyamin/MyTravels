@@ -255,7 +255,8 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                 if (dStart.compareTo(dPrev) == 0)
                     dPrev = dCurr;
 
-                AddMoving(dStart, dPrev, posStart, posPrev, fDistTravelled);
+                if (AddMoving(dStart, dPrev, posStart, posPrev, fDistTravelled))
+                    AddNewPlace(posCur, dCurr, dCurr);
             }
 
             GetPhotosForDate();
@@ -298,7 +299,9 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         {
             try {
                 String sTime1 = Utils.GetTimeFromString(sStartTime);
-                String sTime2 = Utils.GetTimeFromString(sEndTime);
+                String sTime2 = sTime1;
+                if (sEndTime != null)
+                    sTime2 = Utils.GetTimeFromString(sEndTime);
                 String sTime = sTime1;
                 if (!sTime1.equals(sTime2))
                     sTime = String.format("%s - %s", sTime1, sTime2 );
@@ -325,9 +328,12 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             }
         }
 
-        private void AddMoving(String sStart, String sEnd, LatLng posStart, LatLng posEnd, float fDist)
+        private boolean AddMoving(String sStart, String sEnd, LatLng posStart, LatLng posEnd, float fDist)
         {
             long TimeDiff = TimeDiff(sStart, sEnd);
+            if (TimeDiff <= 0)
+                return false;
+
             String sTimeType;
             float Time = TimeDiff;
 
@@ -367,6 +373,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
 
             DataLine Dat = new DataLine(sMovingType, sDist, sTime, PlaceStatus.PLACE_MOVING, type);
             m_DataList.add(Dat);
+            return true;
 
 //            Log.d(TAG, "Travelling for: " + fDistOut + sDistType + ",  " + TimeDiff + " Minutes...");
         }
