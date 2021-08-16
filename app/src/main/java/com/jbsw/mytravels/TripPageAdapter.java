@@ -72,6 +72,10 @@ public class TripPageAdapter extends FragmentPagerAdapter
         return null;
     }
 
+    public TabMap GetMapFragment()
+    {
+        return m_TabMap;
+    }
     @Override
     public int getCount() {
         return m_nTabs;

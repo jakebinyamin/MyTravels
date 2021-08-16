@@ -452,14 +452,8 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         }
     }
 
-    //
-    // Methods for when an item selected from, spinner
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    public void SetDayOnMap(int position)
     {
-        if (m_bInitialising)
-            return;
-
         if (position == 0) {
             m_sFilterDate = null;
         }
@@ -472,7 +466,19 @@ public class TabMap extends Fragment   implements OnMapReadyCallback, View.OnCli
         {
             ResetEventList();
         }
+        m_Spinner.setSelection(position);
         BuildMap();
+    }
+
+    //
+    // Methods for when an item selected from, spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+    {
+        if (m_bInitialising)
+            return;
+
+        SetDayOnMap(position);
     }
 
     @Override

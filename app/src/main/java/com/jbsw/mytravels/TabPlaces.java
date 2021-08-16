@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -116,6 +118,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             m_PlacesList = (ListView) m_ThisWIndow.findViewById(R.id.places_list);
             m_ListAdapter = new ListPlacesAdapter();
             m_PlacesList.setAdapter(m_ListAdapter);
+            m_PlacesList.setOnItemClickListener(new PlaceSelectedListener());
             RecyclerView recyclerView = m_ThisWIndow.findViewById(R.id.day_list);
             LinearLayoutManager DayListLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             recyclerView.setLayoutManager(DayListLayoutManager);
@@ -144,6 +147,23 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         photoIntent.putExtra(PhotoViewer.IntentPosn, position);
 
         startActivity(photoIntent);
+    }
+
+    private class PlaceSelectedListener implements ListView.OnItemClickListener
+    {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+        {
+            try {
+                int nDay = m_DLA.GetCurrItem();
+                TabMap fMap = (TabMap) m_Parent.m_PageAdapter.GetFragment(TripPageAdapter.TAB_MAP);
+                fMap.SetDayOnMap(nDay+1);
+                m_Parent.m_ViewPager.setCurrentItem(TripPageAdapter.TAB_MAP);
+            }
+            catch(Exception e) {
+                Log.e(TAG, "Cant switch to MAP, Error: " + e.getMessage());
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -554,7 +574,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
     private class DayListAdapter extends RecyclerView.Adapter<DayListAdapter.DayItemViewHolder>
     {
         private JourneyDayList m_List;
-        private int nSelected = 0;
+        private int m_nSelected = 0;
 
         public DayListAdapter()
         {
@@ -568,13 +588,18 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             m_List.LoadData();
         }
 
+        public int GetCurrItem()
+        {
+            return m_nSelected;
+        }
+
         private boolean ReloadPlaces(int pos)
         {
             if (!m_BuildDataSem.tryAcquire()) {
                 return false;
             }
 
-            nSelected = pos;
+            m_nSelected = pos;
             notifyItemChanged(pos);
 
             Log.d(TAG, "Reloading places: m_List.GetCount(): "+ m_List.GetCount() + ", pos" + pos);
@@ -614,7 +639,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
 
             holder.Line2.setText(sOut);
 
-            holder.itemView.setSelected(nSelected == position);
+            holder.itemView.setSelected(m_nSelected == position);
         }
 
         @Override
@@ -639,7 +664,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             {
                 Log.d(TAG, "Day Item clicked");
                 int pos = getAdapterPosition();
-                notifyItemChanged(nSelected);
+                notifyItemChanged(m_nSelected);
                 ReloadPlaces(pos);
             }
         }

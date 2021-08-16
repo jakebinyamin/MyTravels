@@ -45,7 +45,7 @@ public class TripActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "TagTripActivity";
 
     private TabLayout m_Tabs;
-    private ViewPager m_ViewPager;
+    public ViewPager m_ViewPager;
     private TabItem m_TabGeneral, m_TabJournal, m_TabMap;
     public TripPageAdapter m_PageAdapter;
     private ImageButton m_BtnBack, m_BtnMenu;
