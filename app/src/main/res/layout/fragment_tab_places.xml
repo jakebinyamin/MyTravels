@@ -4,27 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background = "@color/grey_bkg"
+    android:background="@drawable/unsplash"
     tools:context=".TabPlaces">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/day_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorLiteBackground"
+        android:background="@drawable/unsplash"
         />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photo_list"
         android:layout_width="match_parent"
-        android:background="@drawable/textedit_bkg"
-        android:layout_height="@dimen/dim_photolist_h" />
-
+        android:layout_height="@dimen/dim_photolist_h"
+        android:background="@drawable/unsplash"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+         />
 
     <ListView
         android:id="@+id/places_list"
         android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_height="match_parent"
-    />
+        />
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginVertical="2dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_id5"
+        />
 
 </LinearLayout>

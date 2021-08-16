@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.maps.model.LatLng;
 import com.jbsw.data.GpsDataTable;
 import com.jbsw.data.JourneyDayList;
@@ -102,13 +105,20 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         m_Parent = (TripActivity) getActivity();
         m_DR = m_Parent.GetDataRecord();
 
+        //
+        // Setup Add views
+        MobileAds.initialize(getContext());
+        AdView AddView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        AddView.loadAd(adRequest);
+
         try {
             m_PlacesList = (ListView) m_ThisWIndow.findViewById(R.id.places_list);
             m_ListAdapter = new ListPlacesAdapter();
             m_PlacesList.setAdapter(m_ListAdapter);
             RecyclerView recyclerView = m_ThisWIndow.findViewById(R.id.day_list);
-            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(horizontalLayoutManager);
+            LinearLayoutManager DayListLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(DayListLayoutManager);
             m_DLA = new DayListAdapter();
             recyclerView.setAdapter(m_DLA);
 
