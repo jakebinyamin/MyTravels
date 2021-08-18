@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -63,6 +64,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
     View m_ThisWIndow;
     private ListPlacesAdapter m_ListAdapter;
     private ListView m_PlacesList;
+    private ProgressBar m_ProgressBar;
 
     protected ArrayList<String> m_PhotoList = null;
     protected PhotoListViewAdapter m_PhotoListAdapter;
@@ -116,6 +118,9 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
 
         try {
             m_PlacesList = (ListView) m_ThisWIndow.findViewById(R.id.places_list);
+            m_PhotoRecyclerView = m_ThisWIndow.findViewById(R.id.photo_list);
+            m_ProgressBar = m_ThisWIndow.findViewById(R.id.progressBar);
+            m_ProgressBar.setVisibility(View.GONE);
             m_ListAdapter = new ListPlacesAdapter();
             m_PlacesList.setAdapter(m_ListAdapter);
             m_PlacesList.setOnItemClickListener(new PlaceSelectedListener());
@@ -125,7 +130,6 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             m_DLA = new DayListAdapter();
             recyclerView.setAdapter(m_DLA);
 
-            m_PhotoRecyclerView = m_ThisWIndow.findViewById(R.id.photo_list);
             LinearLayoutManager horizontalLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             m_PhotoRecyclerView.setLayoutManager(horizontalLayoutManager2);
             m_PhotoList = new ArrayList<String>();
@@ -185,6 +189,10 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         protected void onPreExecute()
         {
             Log.d(TAG, "Starting onPreExecute");
+            m_ProgressBar.setVisibility(View.VISIBLE);
+            m_PhotoRecyclerView.setVisibility(View.GONE);
+
+
             super.onPreExecute();
             if (m_DataList == null)
                 m_DataList = new ArrayList<>();
@@ -231,8 +239,8 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                     if (TimeDiff > 0)
                         nSpeed = nDist / TimeDiff;
 
-//                    Log.d("JAKE", "Distance between: " + nDist + " M,  Time Between: " + TimeDiff + " minutes - Meters/min: " + nDist/TimeDiff);
-//                    DebugLocation(posCur, gpsDR.Date);
+                    Log.d("JAKE", "Distance between: " + nDist + " M,  Time Between: " + TimeDiff + " minutes - Meters/min: " + nDist/TimeDiff);
+                    DebugLocation(posCur, gpsDR.Date);
 
                     //
                     // Process STATIONARY..
@@ -306,6 +314,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             else
                 m_PhotoRecyclerView.setVisibility(View.VISIBLE);
 
+            m_ProgressBar.setVisibility(View.GONE);
             m_BuildDataSem.release();
         }
 
