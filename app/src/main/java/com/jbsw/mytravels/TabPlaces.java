@@ -369,7 +369,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
 
             MovingType type = MovingType.MOV_DRIVE;
             String sMovingType = GetString(R.string.driving);
-            if (fDist / TimeDiff < 90) {
+            if (fDist / TimeDiff < 152) {
                 sMovingType = GetString(R.string.walking);
                 type = MovingType.MOV_WALK;
             }
