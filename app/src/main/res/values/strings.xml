@@ -108,6 +108,7 @@
     <string name="restore_import">Importing data...</string>
     <string name="bkp_complete">Backup Complete!</string>
     <string name="restore_complete">Restore Complete!</string>
+    <string name="places_descr">As your journey grows this section will show you a record of all the places that you have been to!</string>
 
     <!-- Preference Titles -->
     <string name="reply_title">Default reply action</string>

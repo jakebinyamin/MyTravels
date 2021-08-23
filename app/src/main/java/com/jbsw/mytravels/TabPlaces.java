@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -612,7 +613,15 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             notifyItemChanged(pos);
 
             Log.d(TAG, "Reloading places: m_List.GetCount(): "+ m_List.GetCount() + ", pos" + pos);
-            if (m_List == null || m_List.GetCount() < pos) {
+            if (m_List == null || m_List.GetCount() <= 0) {
+                //
+                // If no data then show UX accordingly.
+                Log.d(TAG, "No Places data collected...");
+                TextView tv = m_ThisWIndow.findViewById(R.id.no_places);
+                tv.setVisibility(View.VISIBLE);
+                LinearLayout layout = m_ThisWIndow.findViewById(R.id.body);
+                layout.setVisibility(View.GONE);
+
                 m_BuildDataSem.release();
                 return false;
             }
