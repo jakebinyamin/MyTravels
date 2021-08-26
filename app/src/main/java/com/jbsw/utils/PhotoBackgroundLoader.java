@@ -33,6 +33,7 @@ public class PhotoBackgroundLoader
     {
         vImg.setImageResource(m_ResNotLoaded);
         m_Map.put(vImg, sPhoto);
+        Log.d(TAG, "Size of Hash Map: " + m_Map.size());
 
         //
         // Start loading photo in the background
@@ -128,6 +129,9 @@ public class PhotoBackgroundLoader
             m_View.setImageBitmap(m_Bitmap);
             if (m_bRoundedEdge)
                 m_View.setClipToOutline(true);
+            String sFileToLoad = m_Map.get(m_View);
+            if(sFileToLoad.equals(m_sPhoto))
+                m_Map.remove(m_sPhoto, m_View);
         }
     }
 }

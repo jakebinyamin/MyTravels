@@ -144,16 +144,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 RateUs();
                 break;
 
-            case R.id.menu_backup:
-                Intent intentBackup = new Intent(this, BackupProgress.class);
-                startActivity(intentBackup);
-//                SigninAndContinue(SIGN_IN_BACKUP);
-                break;
-
-            case R.id.menu_restore:
-                Intent intentRestore = new Intent(this, RestoreProgress.class);
-                startActivity(intentRestore);
-                break;
+//            case R.id.menu_backup:
+//                Intent intentBackup = new Intent(this, BackupProgress.class);
+//                startActivity(intentBackup);
+//                break;
+//
+//            case R.id.menu_restore:
+//                Intent intentRestore = new Intent(this, RestoreProgress.class);
+//                startActivity(intentRestore);
+//                break;
         }
 
         m_Drawer.closeDrawer(GravityCompat.START);
