@@ -143,12 +143,19 @@ public class MasterDBAdapter extends BaseAdapter
 
         if (DR.sPhoto != null && !DR.sPhoto.isEmpty())
         {
-            Log.d(TAG, "From File, id: " + DR.Id + " sPhoto is: " + DR.sPhoto);
+            Log.d(TAG, "From File, id: " + DR.Id + " "  + DR.Name + " sPhoto is: " + DR.sPhoto + " Position: " + position);
+//            PhotoBackgroundLoader  BkgLoader = new PhotoBackgroundLoader();
+//            BkgLoader.SetNotLoadedResource(R.drawable.photo_loading_bkg);
+//            BkgLoader.LoadDefaultBitmap(m_Main, R.drawable.splash);
+//            BkgLoader.LoadPhoto(DR.sPhoto, v.Photo);
             m_BkgLoader.LoadPhoto(DR.sPhoto, v.Photo);
+//            Bitmap myBitmap = Utils.LoadImage(DR.sPhoto);
+//            v.Photo.setImageBitmap(myBitmap);
+
         }
         else
         {
-            Log.d(TAG, "From Resource " + DR.Id);
+            Log.d(TAG, "From Resource " + DR.Id + " "+ DR.Name + " Position: " + position);
             m_BkgLoader.LoadDefaultPhoto(v.Photo);
         }
 

@@ -507,6 +507,11 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
     ////////////////////////////////////////////////////////////////////////////////////////
     private class ListPlacesAdapter extends BaseAdapter
     {
+        private int nViewCount = 0;
+        private static final int VIEW_TYPE_STATIONARY = 0;
+        private static final int VIEW_TYPE_MOVING = 1;
+        private static final int VIEW_TYPE_NONE = -1;
+
         @Override
         public int getCount()
         {
@@ -531,19 +536,46 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent)
+        public int getViewTypeCount()
         {
+            return 2;
+        }
 
+        @Override
+        public int getItemViewType(int position)
+        {
             DataLine data = m_DataList.get(position);
             if (data == null || m_BuildDataSem.availablePermits() <= 0)
+                return VIEW_TYPE_NONE;
+
+            if (data.m_Status == PlaceStatus.PLACE_STATIONARY)
+                return VIEW_TYPE_STATIONARY;
+
+            if (data.m_Status == PlaceStatus.PLACE_MOVING)
+                return VIEW_TYPE_MOVING;
+
+            return VIEW_TYPE_NONE;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            int nViewType = getItemViewType(position);
+
+            if (nViewType == VIEW_TYPE_NONE)
                 return convertView;
 
+            DataLine data = m_DataList.get(position);
+
             if (convertView == null) {
-                if (data.m_Status == PlaceStatus.PLACE_STATIONARY)
+                if (nViewType == VIEW_TYPE_STATIONARY)
                     convertView = LayoutInflater.from(m_ThisWIndow.getContext()).inflate(R.layout.places_row, parent, false);
                 else
                     convertView = LayoutInflater.from(m_ThisWIndow.getContext()).inflate(R.layout.travel_row, parent, false);
                 convertView.setClipToOutline(true);
+                nViewCount++;
+
+                Log.d("Jake111", "View Count: " + nViewCount);
             }
 
             //
@@ -559,7 +591,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             TextView Time = convertView.findViewById(R.id.time);
             Time.setText(data.m_sTime);
 
-            if (data.m_Status == PlaceStatus.PLACE_MOVING) {
+            if (nViewType == VIEW_TYPE_MOVING) {
                 ImageView Img = convertView.findViewById(R.id.travel_icon);
                 int Resource = R.drawable.drive;
                 switch (data.m_MovType) {
