@@ -198,8 +198,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         m_DBAdapter.Refresh();
         Log.d(TAG,"In onResume - adapter refreshed");
-        SetupUX();
-        Log.d(TAG,"In onResume - SetupUX complete");
+//        SetupUX();
+//        Log.d(TAG,"In onResume - SetupUX complete");
     }
 
     public void SetupUX()

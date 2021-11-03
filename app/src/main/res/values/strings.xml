@@ -20,6 +20,8 @@
     <string name="trip_description">Description</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="day_no">Day %d</string>
+    <string name="no_street">Unknown location</string>
+    <string name="no_suburb">(Check internet connection)</string>
     <string name="date_started">Started: %s</string>
     <string name="date_ended">Finished: %s</string>
     <string name="not_started">Not Yet Started</string>

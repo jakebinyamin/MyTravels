@@ -33,7 +33,7 @@ public class MasterDBAdapter extends BaseAdapter
 {
     private static final String TAG = "TAGMasterDBAdapter";
     private TravelMasterTable m_MasterTable;
-//    private Context m_Context;
+    private boolean m_bRefreshing;
     private MainActivity m_Main;
     private LayoutInflater m_inflter;
     private PhotoBackgroundLoader m_BkgLoader;
@@ -62,6 +62,7 @@ public class MasterDBAdapter extends BaseAdapter
         @Override
         protected void onPostExecute(String str)
         {
+            m_bRefreshing = false;
             notifyDataSetChanged();
             m_Main.SetupUX();
         }
@@ -69,6 +70,9 @@ public class MasterDBAdapter extends BaseAdapter
 
     public void Refresh()
     {
+        if (m_bRefreshing)
+            return;
+        m_bRefreshing = true;
         RefreshInThread Thrd = new RefreshInThread();
         Thrd.execute();
     }
@@ -81,6 +85,9 @@ public class MasterDBAdapter extends BaseAdapter
     @Override
     public int getCount()
     {
+        if (m_bRefreshing)
+            return 0;
+
         return m_MasterTable.GetRecordCount();
     }
 
@@ -128,8 +135,8 @@ public class MasterDBAdapter extends BaseAdapter
         int Backgrounds[] = {R.drawable.master_rec_bacground2, R.drawable.master_rec_background3, R.drawable.master_rec_background4, R.drawable.master_rec_background5};
         int pos = position % Backgrounds.length;
         convertView.setBackgroundResource(Backgrounds[pos]);
-
         ViewHolder v = (ViewHolder) convertView.getTag();
+
         TravelMasterTable.DataRecord DR = m_MasterTable.GetDataAtPosition(position);
         if (DR == null)
             return convertView;
@@ -144,14 +151,7 @@ public class MasterDBAdapter extends BaseAdapter
         if (DR.sPhoto != null && !DR.sPhoto.isEmpty())
         {
             Log.d(TAG, "From File, id: " + DR.Id + " "  + DR.Name + " sPhoto is: " + DR.sPhoto + " Position: " + position);
-//            PhotoBackgroundLoader  BkgLoader = new PhotoBackgroundLoader();
-//            BkgLoader.SetNotLoadedResource(R.drawable.photo_loading_bkg);
-//            BkgLoader.LoadDefaultBitmap(m_Main, R.drawable.splash);
-//            BkgLoader.LoadPhoto(DR.sPhoto, v.Photo);
             m_BkgLoader.LoadPhoto(DR.sPhoto, v.Photo);
-//            Bitmap myBitmap = Utils.LoadImage(DR.sPhoto);
-//            v.Photo.setImageBitmap(myBitmap);
-
         }
         else
         {
@@ -166,16 +166,7 @@ public class MasterDBAdapter extends BaseAdapter
     {
         Img.clearAnimation();
         if (DR.Status == TravelMasterTable.StatusInProgress)
-        {
             Utils.SetRecordingAnimation(Img);
-//            Img.setImageResource(R.drawable.recording);
-//            Animation mAnimation = new AlphaAnimation(1, 0);
-//            mAnimation.setDuration(500);
-//            mAnimation.setInterpolator(new LinearInterpolator());
-//            mAnimation.setRepeatCount(Animation.INFINITE);
-//            mAnimation.setRepeatMode(Animation.REVERSE);
-//            Img.startAnimation(mAnimation);
-        }
         if (DR.Status == TravelMasterTable.StatusComplete)
             Img.setImageResource(R.drawable.tick);
         if (DR.Status == TravelMasterTable.StatusNotStarted)

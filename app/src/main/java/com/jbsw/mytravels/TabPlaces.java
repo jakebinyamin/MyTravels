@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -183,7 +184,6 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         {
             m_Date = Date;
             m_sQueryDate = String.format("%d-%02d-%02d", Date.getYear(), Date.getMonthValue(), Date.getDayOfMonth());
-            Log.d(TAG, "Querying date: " + m_sQueryDate);
         }
 
         @Override
@@ -240,8 +240,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                     if (TimeDiff > 0)
                         nSpeed = nDist / TimeDiff;
 
-                    Log.d("JAKE", "Distance between: " + nDist + " M,  Time Between: " + TimeDiff + " minutes - Meters/min: " + nDist/TimeDiff);
-                    DebugLocation(posCur, gpsDR.Date);
+//                    DebugLocation(posCur, gpsDR.Date);
 
                     //
                     // Process STATIONARY..
@@ -337,19 +336,20 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
 
         private void AddNewPlace(LatLng loc, String sStartTime, String sEndTime)
         {
-            try {
-                String sTime1 = Utils.GetTimeFromString(sStartTime);
-                String sTime2 = sTime1;
-                if (sEndTime != null)
-                    sTime2 = Utils.GetTimeFromString(sEndTime);
-                String sTime = sTime1;
-                if (!sTime1.equals(sTime2))
-                    sTime = String.format("%s - %s", sTime1, sTime2 );
+            String sTime1 = Utils.GetTimeFromString(sStartTime);
+            String sTime2 = sTime1;
+            if (sEndTime != null)
+                sTime2 = Utils.GetTimeFromString(sEndTime);
+            String sTime = sTime1;
+            if (!sTime1.equals(sTime2))
+                sTime = String.format("%s - %s", sTime1, sTime2 );
+            String sLine1 = getResources().getString(R.string.no_street);
+            String sLine2 = getResources().getString(R.string.no_suburb);
 
+            try {
                 Geocoder geocoder = new Geocoder(m_ThisWIndow.getContext(), Locale.US/*Locale.getDefault()*/);
                 List<Address> addresses = geocoder.getFromLocation(loc.latitude, loc.longitude, 1);
                 Address obj = addresses.get(0);
-                String sLine1;
                 if (obj.getThoroughfare() == null || obj.getFeatureName() == null)
                     sLine1 = obj.getAddressLine(0);
                 else {
@@ -357,14 +357,15 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                     if (!obj.getThoroughfare().equals(obj.getFeatureName()))
                         sLine1 += ", " + obj.getFeatureName();
                 }
-                String sLine2 = obj.getLocality();
-//                Log.d(TAG, "Address data: " + obj.toString());
+                sLine2 = obj.getLocality();
+
                 DataLine Dat = new DataLine(sLine1, sLine2, sTime, PlaceStatus.PLACE_STATIONARY, MovingType.MOV_NONE);
                 m_DataList.add(Dat);
 
-                /* Log.d(TAG, "Start : "+ sStartTime + ", End: "+ sEndTime + " ==>>  Address: " +obj.getAddressLine(0)); */
             } catch (Exception e) {
                 Log.e(TAG, "Exception getting location data: " + e.getMessage());
+                DataLine Dat = new DataLine(sLine1, sLine2, sTime, PlaceStatus.PLACE_STATIONARY, MovingType.MOV_NONE);
+                m_DataList.add(Dat);
             }
         }
 
@@ -507,10 +508,8 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
     ////////////////////////////////////////////////////////////////////////////////////////
     private class ListPlacesAdapter extends BaseAdapter
     {
-        private int nViewCount = 0;
         private static final int VIEW_TYPE_STATIONARY = 0;
         private static final int VIEW_TYPE_MOVING = 1;
-        private static final int VIEW_TYPE_NONE = -1;
 
         @Override
         public int getCount()
@@ -546,7 +545,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         {
             DataLine data = m_DataList.get(position);
             if (data == null || m_BuildDataSem.availablePermits() <= 0)
-                return VIEW_TYPE_NONE;
+                return Adapter.IGNORE_ITEM_VIEW_TYPE;
 
             if (data.m_Status == PlaceStatus.PLACE_STATIONARY)
                 return VIEW_TYPE_STATIONARY;
@@ -554,7 +553,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             if (data.m_Status == PlaceStatus.PLACE_MOVING)
                 return VIEW_TYPE_MOVING;
 
-            return VIEW_TYPE_NONE;
+            return Adapter.IGNORE_ITEM_VIEW_TYPE;
         }
 
         @Override
@@ -562,7 +561,7 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
         {
             int nViewType = getItemViewType(position);
 
-            if (nViewType == VIEW_TYPE_NONE)
+            if (nViewType == Adapter.IGNORE_ITEM_VIEW_TYPE)
                 return convertView;
 
             DataLine data = m_DataList.get(position);
@@ -573,9 +572,6 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
                 else
                     convertView = LayoutInflater.from(m_ThisWIndow.getContext()).inflate(R.layout.travel_row, parent, false);
                 convertView.setClipToOutline(true);
-                nViewCount++;
-
-                Log.d("Jake111", "View Count: " + nViewCount);
             }
 
             //
@@ -648,7 +644,6 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             if (m_List == null || m_List.GetCount() <= 0) {
                 //
                 // If no data then show UX accordingly.
-                Log.d(TAG, "No Places data collected...");
                 TextView tv = m_ThisWIndow.findViewById(R.id.no_places);
                 tv.setVisibility(View.VISIBLE);
                 LinearLayout layout = m_ThisWIndow.findViewById(R.id.body);
@@ -712,7 +707,6 @@ public class TabPlaces extends Fragment implements PhotoListViewAdapter.PhotoIte
             @Override
             public void onClick(View v)
             {
-                Log.d(TAG, "Day Item clicked");
                 int pos = getAdapterPosition();
                 notifyItemChanged(m_nSelected);
                 ReloadPlaces(pos);

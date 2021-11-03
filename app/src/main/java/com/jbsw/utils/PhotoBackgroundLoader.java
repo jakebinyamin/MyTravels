@@ -31,9 +31,13 @@ public class PhotoBackgroundLoader
 
     public void LoadPhoto(String sPhoto, ImageView vImg)
     {
+        Log.d(TAG, "Trying to load image: " + sPhoto);
         vImg.setImageResource(m_ResNotLoaded);
-        m_Map.put(vImg, sPhoto);
-        Log.d(TAG, "Size of Hash Map: " + m_Map.size());
+        if (m_Map.put(vImg, sPhoto) == null)
+            Log.d(TAG, "Size of Hash Map: " + m_Map.size());
+        else {
+            Log.d(TAG, "Cant Add photos to Hash Map...bSize of Hash Map: " + m_Map.size());
+        }
 
         //
         // Start loading photo in the background
@@ -44,8 +48,17 @@ public class PhotoBackgroundLoader
 
     public void LoadDefaultPhoto(ImageView vImg)
     {
+        //
+        // If the Hash map has the Img in it, then remove it.
+        String sFileToLoad = m_Map.get(vImg);
+        if (sFileToLoad != null) {
+            m_Map.remove(vImg, sFileToLoad);
+            Log.d(TAG,"Removing photo from HashMap for Default PHOTO!!!!: " + sFileToLoad + " - New HasMap size: " + m_Map.size());
+        }
+        
         vImg.setImageBitmap(m_BmpDefault);
     }
+
     public void SetRoundedEdge() { m_bRoundedEdge = true; }
 
     public void SetNotLoadedResource(int nRes)
@@ -129,9 +142,20 @@ public class PhotoBackgroundLoader
             m_View.setImageBitmap(m_Bitmap);
             if (m_bRoundedEdge)
                 m_View.setClipToOutline(true);
-            String sFileToLoad = m_Map.get(m_View);
-            if(sFileToLoad.equals(m_sPhoto))
-                m_Map.remove(m_sPhoto, m_View);
+            if (!m_Map.remove(m_View, m_sPhoto))
+                Log.d(TAG,"Cant remove image from HashMap: " + m_sPhoto);
+            else
+               Log.d(TAG,"Removing photo from HashMap: " + m_sPhoto + " - New HasMap size: " + m_Map.size());
         }
+    }
+
+    private void DumpHash()
+    {
+        Log.d(TAG, "===========================================================");
+        for (Map.Entry<ImageView, String> entry : m_Map.entrySet())
+        {
+            Log.d(TAG, "Key (View): " + entry.getKey() + ",    Value: " + entry.getValue());
+        }
+        Log.d(TAG, "===========================================================");
     }
 }

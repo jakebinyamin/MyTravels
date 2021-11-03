@@ -106,6 +106,7 @@ public class JournalAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         if (convertView == null) {
+            Log.d(TAG, "Convertview for position: " + position);
             convertView = LayoutInflater.from(m_Context).inflate(R.layout.journal_record_row, parent, false);
             convertView.setClipToOutline(true);
         }
@@ -140,6 +141,7 @@ public class JournalAdapter extends BaseAdapter
         // Journal Title
         TextView sEntry = convertView.findViewById(R.id.journal_text);
         sEntry.setText(DR.sTitle);
+        Log.d(TAG, "Showing entry position: " + position + ", Entry: " + DR.sTitle);
 
         //
         // Add a photo if there is one.
